@@ -5,6 +5,9 @@ namespace calculadora_custos.Repository
 {
     public class MyContext : DbContext
     {
+        public MyContext()
+        {
+        }
         public MyContext(DbContextOptions<MyContext> options) : base(options)
         {
         }
@@ -16,6 +19,10 @@ namespace calculadora_custos.Repository
         public DbSet<DeliveryCost> DeliveryCosts { get; set; }
         public DbSet<FixedCost> FixedCosts { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<IngredientToRecipe> IngredientToRecipes { get; set; }
+        public DbSet<PresentationToRecipe> PresentationToRecipes { get; set; }
+        public DbSet<PreparationToRecipe> PreparationToRecipes { get; set; }
+        public DbSet<DeliveryToRecipe> DeliveryToRecipes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -4,9 +4,10 @@ namespace calculadora_custos.Models
     {
         public int Id { get; set; }
         public string? Name { get; set; }
-        public string? QuantityType { get; set; }
-        public double Quantity { get; set; }
-        public double Price { get; set; }
-        public double PricePerAmount { get; set; }
+        public string? MeasurementUnit { get; set; }
+        public double TotalAmount { get; set; }
+        public double TotalValue { get; set; }
+        public double ValuePerAmount { get; set; }
+        public double DefaultAmount { get; set; }
     }
 }

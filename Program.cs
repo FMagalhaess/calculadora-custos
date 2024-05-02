@@ -1,3 +1,10 @@
+using calculadora_custos.Repository;
+
+using (var db = new MyContext())
+{
+    db.Database.EnsureCreated();
+    // Código executado no banco de dados aqui
+}
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
