@@ -1,12 +1,15 @@
 using calculadora_custos.Repository;
+using Microsoft.EntityFrameworkCore;
 
 using (var db = new MyContext())
 {
     db.Database.EnsureCreated();
-    // Código executado no banco de dados aqui
 }
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<MyContext>();
+builder.Services.AddScoped<IDbContext, MyContext>();
+builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
 // Add services to the container.
 
 builder.Services.AddControllers();
