@@ -17,7 +17,7 @@ public class IngredientsController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok("Hello World");
+        return Ok(_IngredientRepository.GetIngredients());
     }
 
     [HttpPost]
@@ -25,8 +25,8 @@ public class IngredientsController : ControllerBase
     {
         try
         {
-            Ingredient CreatedRecipe = _IngredientRepository.CreateIngredient(ingredient);
-            return Created("", CreatedRecipe);
+            Ingredient CreatedIngredient = _IngredientRepository.CreateIngredient(ingredient);
+            return Created("", CreatedIngredient);
         }
         catch (Exception e)
         {
