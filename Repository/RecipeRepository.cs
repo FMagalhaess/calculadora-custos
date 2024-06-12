@@ -4,13 +4,18 @@ namespace calculadora_custos.Repository;
 
 public class RecipeRepository : IRecipeRepository
 {
+    private readonly IDbContext _context;
+    public RecipeRepository(IDbContext context)
+    {
+        _context = context;
+    }
     public Recipe CreateRecipe(Recipe recipe)
     {
         throw new NotImplementedException();
     }
 
-    public Recipe GetRecipe()
+    public List<Recipe> GetRecipes()
     {
-        throw new NotImplementedException();
+        return _context.Recipes.ToList();
     }
 }
