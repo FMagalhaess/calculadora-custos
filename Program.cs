@@ -12,6 +12,8 @@ builder.Services.AddDbContext<MyContext>();
 builder.Services.AddScoped<IDbContext, MyContext>();
 builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
 builder.Services.AddScoped<IDeliveryCostRepository, DeliveryCostRepository>();
+builder.Services.AddScoped<IPresentationCostRepository, PresentationCostRepository>();
+builder.Services.AddScoped<IPreparationCostRepository, PreparationCostRepository>();
 // Add services to the container.
 
 builder.Services.AddControllers();
