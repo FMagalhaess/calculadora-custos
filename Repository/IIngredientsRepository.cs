@@ -6,5 +6,5 @@ namespace calculadora_custos.Repository;
         Ingredient CreateIngredient(Ingredient ingredient);
         void DeleteIngredient(int id);
         void UpdateIngredient(int id, Ingredient ingredient);
-        
+        bool IngredientExists(int id);
     }

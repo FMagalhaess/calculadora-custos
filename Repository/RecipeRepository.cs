@@ -1,3 +1,4 @@
+using calculadora_custos.DTO;
 using calculadora_custos.Models;
 using calculadora_custos.Services;
 namespace calculadora_custos.Repository;
@@ -9,7 +10,7 @@ public class RecipeRepository : IRecipeRepository
     {
         _context = context;
     }
-    public Recipe CreateRecipe(Recipe recipe)
+    public Recipe CreateRecipe(InputRecipeFromDTO recipe)
     {
         throw new NotImplementedException();
     }

@@ -49,4 +49,9 @@ public class IngredientRepository : IIngredientRepository
     {
         throw new NotImplementedException();
     }
+
+    public bool IngredientExists(int id)
+    {
+        return _context.Ingredients.Any(i => i.Id == id);
+    }
 }
