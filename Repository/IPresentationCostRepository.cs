@@ -6,5 +6,5 @@ namespace calculadora_custos.Repository;
         PresentationCost CreatePresentationCost(PresentationCost presentationCost);
         void DeletePresentationCost(int id);
         void UpdatePresentationCost(int id, PresentationCost presentationCost);
-        
+        bool PresentationCostExists(int id);
     }

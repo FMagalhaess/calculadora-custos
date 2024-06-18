@@ -6,5 +6,5 @@ public interface IPreparationCostRepository {
     PreparationCost CreatePreparationCost(PreparationCost preparationCost);
     void DeletePreparationCost(int id);
     void UpdatePreparationCost(int id, PreparationCost preparationCost);
-    
+    bool PreparationCostExists(int id);
 }

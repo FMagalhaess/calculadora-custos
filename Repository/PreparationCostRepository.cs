@@ -38,6 +38,11 @@ public class PreparationCostRepository : IPreparationCostRepository
         return _context.PreparationCosts.ToList();
     }
 
+    public bool PreparationCostExists(int id)
+    {
+        return _context.PreparationCosts.Any(p => p.Id == id);
+    }
+
     public void UpdatePreparationCost(int id, PreparationCost preparationCost)
     {
         throw new NotImplementedException();

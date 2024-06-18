@@ -37,6 +37,11 @@ public class PresentationCostRepository : IPresentationCostRepository
         return _context.PresentationCosts.ToList();
     }
 
+    public bool PresentationCostExists(int id)
+    {
+        return _context.PresentationCosts.Any(p => p.Id == id);
+    }
+
     public void UpdatePresentationCost(int id, PresentationCost presentationCost)
     {
         throw new NotImplementedException();

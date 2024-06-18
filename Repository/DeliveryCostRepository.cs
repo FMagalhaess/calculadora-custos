@@ -28,9 +28,24 @@ namespace calculadora_custos.Repository
             return deliveryCost;
         }
 
+        public void DeleteDeliveryCost(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeliveryCostExists(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<DeliveryCost> GetAllDeliveryCosts()
         {
             return _context.DeliveryCosts.ToList();
+        }
+
+        public void UpdateDeliveryCost(int id, DeliveryCost deliveryCost)
+        {
+            throw new NotImplementedException();
         }
     }
 }
