@@ -35,7 +35,7 @@ namespace calculadora_custos.Repository
 
         public bool DeliveryCostExists(int id)
         {
-            throw new NotImplementedException();
+            return _context.DeliveryCosts.Any(d => d.Id == id);
         }
 
         public List<DeliveryCost> GetAllDeliveryCosts()
