@@ -14,6 +14,7 @@ public class RecipeDTO
 public class InputRecipeFromDTO
 {
     public string? Name { get; set; }
+    public decimal? SellPrice { get; set; }
     public List<int>? Ingredients { get; set; }
     public List<decimal>? IngredientsAmount { get; set; }
     public List<int>? PreparationCostItems { get; set; }

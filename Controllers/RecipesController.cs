@@ -1,3 +1,4 @@
+using calculadora_custos.DTO;
 using calculadora_custos.Models;
 using calculadora_custos.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -21,9 +22,17 @@ namespace calculadora_custos.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Recipe recipe)
+        public IActionResult Create([FromBody] InputRecipeFromDTO recipe)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Recipe createdRecipe = _recipeRepository.CreateRecipe(recipe);
+                return Ok(createdRecipe);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

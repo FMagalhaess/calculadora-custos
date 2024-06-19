@@ -73,4 +73,32 @@ public static class EnsureFields{
     {
         return knownPrice * desiredWeight / knownWeight;
     }
+    public static void EnsureIngredientsListNotNull(List<int> ingredients)
+    {
+        if (ingredients == null || ingredients.Count == 0)
+        {
+            throw new Exception("Ingredients list is required");
+        }
+    }
+    public static void EnsurePreparationListNotNull(List<int> preparations)
+    {
+        if (preparations == null || preparations.Count == 0)
+        {
+            throw new Exception("Preparations list is required");
+        }
+    }
+    public static void EnsurePresentationListNotNull(List<int> presentations)
+    {
+        if (presentations == null || presentations.Count == 0)
+        {
+            throw new Exception("Presentations list is required");
+        }
+    }
+    public static void EnsureDeliveryCostListNotNull(List<int> deliveryCosts)
+    {
+        if (deliveryCosts == null || deliveryCosts.Count == 0)
+        {
+            throw new Exception("Delivery Costs list is required");
+        }
+    }
 }
