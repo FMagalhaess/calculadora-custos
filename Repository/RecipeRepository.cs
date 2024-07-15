@@ -100,4 +100,9 @@ public class RecipeRepository : IRecipeRepository
         decimal profit = price - cost;
         return (profit / price) * 100;
     }
+
+    public bool RecipeExists(int id)
+    {
+        return _context.Recipes.Any(r => r.Id == id);
+    }
 }

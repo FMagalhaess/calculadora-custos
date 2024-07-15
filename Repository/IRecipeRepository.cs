@@ -10,4 +10,5 @@ public interface IRecipeRepository
     decimal CalculatePresentationCost(InputRecipeFromDTO recipe);
     decimal CalculateDeliveryCost(InputRecipeFromDTO recipe);
     decimal CalculateTotalCost(InputRecipeFromDTO recipe);
+    bool RecipeExists(int id);
 }

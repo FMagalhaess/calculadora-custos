@@ -15,7 +15,7 @@ builder.Services.AddScoped<IDeliveryCostRepository, DeliveryCostRepository>();
 builder.Services.AddScoped<IPresentationCostRepository, PresentationCostRepository>();
 builder.Services.AddScoped<IPreparationCostRepository, PreparationCostRepository>();
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
-builder.Services.AddScoped<IDeliveryCostsToRecipe, DeliveryCostToRecipe>();
+builder.Services.AddScoped<IDeliveryCostsToRecipe, DeliveryCostToRecipeRepository>();
 builder.Services.AddScoped<IPresentationToRecipe, PresentationToRecipeRepository>();
 builder.Services.AddScoped<IPreparationToRecipe, PreparationToRecipeRepository>();
 builder.Services.AddScoped<IIngredientsToRecipe, IngredientsToRecipe>();
