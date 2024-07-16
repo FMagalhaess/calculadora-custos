@@ -19,11 +19,11 @@ public class RecipeRepository : IRecipeRepository
     {
         try 
         {
-            EnsureFields.EnsureNameNotNull(recipe.Name);
-            EnsureFields.EnsureIngredientsListNotNull(recipe.Ingredients);
-            EnsureFields.EnsurePreparationListNotNull(recipe.PreparationCostItems);
-            EnsureFields.EnsurePresentationListNotNull(recipe.PresentationCostItems);
-            EnsureFields.EnsureDeliveryCostListNotNull(recipe.DeliveryCostItems);
+            EnsureFields.EnsureNameNotNull(recipe.Name!);
+            EnsureFields.EnsureIngredientsListNotNull(recipe.Ingredients!);
+            EnsureFields.EnsurePreparationListNotNull(recipe.PreparationCostItems!);
+            EnsureFields.EnsurePresentationListNotNull(recipe.PresentationCostItems!);
+            EnsureFields.EnsureDeliveryCostListNotNull(recipe.DeliveryCostItems!);
             totalCosts = CalculateTotalCost(recipe);
             sellPrice = recipe.SellPrice ?? totalCosts * 1.2m;
             profitPercentage = CalculateProfitPercentage(totalCosts, sellPrice);

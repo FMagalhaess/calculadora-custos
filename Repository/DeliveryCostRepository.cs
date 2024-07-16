@@ -15,7 +15,7 @@ namespace calculadora_custos.Repository
         {
             try
             {
-                EnsureFields.EnsureNameNotNull(deliveryCost.Name);
+                EnsureFields.EnsureNameNotNull(deliveryCost.Name!);
                 EnsureFields.EnsureTotalAmountNotNegative(deliveryCost.Amount);
                 EnsureFields.EnsureTotalValueNotNegative(deliveryCost.Value);
             }

@@ -28,13 +28,13 @@ public class DeliveryCostToRecipeRepository : IDeliveryCostsToRecipe
             {
                 throw new Exception("Recipe not found");
             }
+            _context.DeliveryToRecipes.Add(deliveryCostsToRecipe);
+            _context.SaveChanges();
         }
         catch (Exception e)
         {
             throw new Exception(e.Message);
         }
-        _context.DeliveryToRecipes.Add(deliveryCostsToRecipe);
-        _context.SaveChanges();
         return deliveryCostsToRecipe;
     }
 

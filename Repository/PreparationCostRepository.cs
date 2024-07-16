@@ -13,9 +13,9 @@ public class PreparationCostRepository : IPreparationCostRepository
     {
         try
         {
-            EnsureFields.EnsureNameNotNull(preparationCost.Name);
+            EnsureFields.EnsureNameNotNull(preparationCost.Name!);
             EnsureFields.EnsureDefaultAmountNotNegative(preparationCost.DefaultAmount);
-            EnsureFields.EnsureMeasureUnitNotNull(preparationCost.MeasurementUnit);
+            EnsureFields.EnsureMeasureUnitNotNull(preparationCost.MeasurementUnit!);
             EnsureFields.EnsureTotalValueNotNegative(preparationCost.TotalValue);
         }
         catch (Exception e)

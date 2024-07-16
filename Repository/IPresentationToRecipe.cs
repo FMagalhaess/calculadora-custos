@@ -4,9 +4,9 @@ namespace calculadora_custos.Repository;
 
 public interface IPresentationToRecipe
 {
-    List<PresentationCost> GetPresentationsToRecipe();
-    PresentationCost CreatePresentationToRecipe(PresentationCost presentationToRecipe);
+    List<PresentationToRecipe> GetPresentationsToRecipe();
+    PresentationToRecipe CreatePresentationToRecipe(PresentationToRecipe presentationToRecipe);
     void DeletePresentationToRecipe(int id);
-    void UpdatePresentationToRecipe(int id, PresentationCost presentationToRecipe);
+    void UpdatePresentationToRecipe(int id, PresentationToRecipe presentationToRecipe);
     bool PresentationToRecipeExists(int id);
 }

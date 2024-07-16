@@ -12,7 +12,7 @@ public class PresentationToRecipeRepository : IPresentationToRecipe
     {
         _context = context;
     }
-    public PresentationCost CreatePresentationToRecipe(PresentationCost presentationToRecipe)
+    public PresentationToRecipe CreatePresentationToRecipe(PresentationToRecipe presentationToRecipe)
     {
         throw new NotImplementedException();
     }
@@ -22,7 +22,7 @@ public class PresentationToRecipeRepository : IPresentationToRecipe
         throw new NotImplementedException();
     }
 
-    public List<PresentationCost> GetPresentationsToRecipe()
+    public List<PresentationToRecipe> GetPresentationsToRecipe()
     {
         throw new NotImplementedException();
     }
@@ -32,7 +32,7 @@ public class PresentationToRecipeRepository : IPresentationToRecipe
         throw new NotImplementedException();
     }
 
-    public void UpdatePresentationToRecipe(int id, PresentationCost presentationToRecipe)
+    public void UpdatePresentationToRecipe(int id, PresentationToRecipe presentationToRecipe)
     {
         throw new NotImplementedException();
     }
