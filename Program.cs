@@ -18,7 +18,7 @@ builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 builder.Services.AddScoped<IDeliveryCostsToRecipe, DeliveryCostToRecipeRepository>();
 builder.Services.AddScoped<IPresentationToRecipe, PresentationToRecipeRepository>();
 builder.Services.AddScoped<IPreparationToRecipe, PreparationToRecipeRepository>();
-builder.Services.AddScoped<IIngredientsToRecipe, IngredientsToRecipe>();
+builder.Services.AddScoped<IIngredientsToRecipe, IngredientsToRecipeRepository>();
 // Add services to the container.
 
 builder.Services.AddControllers();
