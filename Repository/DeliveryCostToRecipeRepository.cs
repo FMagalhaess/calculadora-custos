@@ -7,13 +7,11 @@ public class DeliveryCostToRecipeRepository : IDeliveryCostsToRecipe
 {
     private readonly IDbContext _context;
     private readonly IDeliveryCostRepository _deliveryCostRepository;
-    private readonly IRecipeRepository _recipeRepository;
 
-        public DeliveryCostToRecipeRepository(IDbContext context, IDeliveryCostRepository deliveryCostRepository, IRecipeRepository recipeRepository)
+        public DeliveryCostToRecipeRepository(IDbContext context, IDeliveryCostRepository deliveryCostRepository)
         {
             _context = context;
             _deliveryCostRepository = deliveryCostRepository;
-            _recipeRepository = recipeRepository;
         }
 
     public DeliveryToRecipe CreateDeliveryCostsToRecipe(DeliveryToRecipe deliveryCostsToRecipe)
@@ -23,10 +21,6 @@ public class DeliveryCostToRecipeRepository : IDeliveryCostsToRecipe
             if(!_deliveryCostRepository.DeliveryCostExists(deliveryCostsToRecipe.DeliveryCostId))
             {
                 throw new Exception("Delivery cost not found");
-            }
-            if(!_recipeRepository.RecipeExists(deliveryCostsToRecipe.RecipeId))
-            {
-                throw new Exception("Recipe not found");
             }
             _context.DeliveryToRecipes.Add(deliveryCostsToRecipe);
             _context.SaveChanges();

@@ -9,22 +9,16 @@ public class IngredientsToRecipeRepository : IIngredientsToRecipe
 {
     private readonly IDbContext _context;
     private readonly IIngredientRepository _ingredientRepository;
-    private readonly IRecipeRepository _recipeRepository;
-    public IngredientsToRecipeRepository(IDbContext context, IIngredientRepository ingredientRepository, IRecipeRepository recipeRepository)
+    public IngredientsToRecipeRepository(IDbContext context, IIngredientRepository ingredientRepository)
     {
         _context = context;
         _ingredientRepository = ingredientRepository;
-        _recipeRepository = recipeRepository;
     }
 
     public IngredientToRecipe CreateIngredientsToRecipe(IngredientToRecipe ingredientsToRecipe)
     {
         try
         {
-            if(!_recipeRepository.RecipeExists(ingredientsToRecipe.RecipeId))
-            {
-                throw new Exception("Recipe not found");
-            }
             if(!_ingredientRepository.IngredientExists(ingredientsToRecipe.IngredientId))
             {
                 throw new Exception("Ingredient not found");

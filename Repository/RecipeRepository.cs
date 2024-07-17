@@ -7,13 +7,26 @@ namespace calculadora_custos.Repository;
 public class RecipeRepository : IRecipeRepository
 {
     private readonly IDbContext _context;
+    private readonly IIngredientsToRecipe _ingredientsToRecipe;
+    private readonly IPreparationToRecipe _preparationToRecipe;
+    private readonly IPresentationToRecipe _presentationToRecipe;
+    private readonly IDeliveryCostsToRecipe _deliveryCostsToRecipe;
     private decimal totalCosts;
     private decimal sellPrice;
     private decimal profitPercentage;
 
-    public RecipeRepository(IDbContext context)
+    public RecipeRepository(
+        IDbContext context,
+        IIngredientsToRecipe ingredientsToRecipe,
+        IPreparationToRecipe preparationToRecipe,
+        IPresentationToRecipe presentationToRecipe,
+        IDeliveryCostsToRecipe deliveryCostsToRecipe)
     {
         _context = context;
+        _ingredientsToRecipe = ingredientsToRecipe;
+        _preparationToRecipe = preparationToRecipe;
+        _presentationToRecipe = presentationToRecipe;
+        _deliveryCostsToRecipe = deliveryCostsToRecipe;
     }
     public Recipe CreateRecipe(InputRecipeFromDTO recipe)
     {
@@ -55,6 +68,8 @@ public class RecipeRepository : IRecipeRepository
     }
     public List<Recipe> GetRecipes()
     {
+        var recipes = from recipe in _context.Recipes
+                      select recipe;
         return _context.Recipes.ToList();
     }
 

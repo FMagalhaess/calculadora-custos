@@ -19,6 +19,10 @@ builder.Services.AddScoped<IDeliveryCostsToRecipe, DeliveryCostToRecipeRepositor
 builder.Services.AddScoped<IPresentationToRecipe, PresentationToRecipeRepository>();
 builder.Services.AddScoped<IPreparationToRecipe, PreparationToRecipeRepository>();
 builder.Services.AddScoped<IIngredientsToRecipe, IngredientsToRecipeRepository>();
+builder.Services.AddScoped(provider => new Lazy<IIngredientsToRecipe>(()=> provider.GetRequiredService<IIngredientsToRecipe>()));
+builder.Services.AddScoped(provider => new Lazy<IPreparationToRecipe>(()=> provider.GetRequiredService<IPreparationToRecipe>()));
+builder.Services.AddScoped(provider => new Lazy<IPresentationToRecipe>(()=> provider.GetRequiredService<IPresentationToRecipe>()));
+builder.Services.AddScoped(provider => new Lazy<IDeliveryCostsToRecipe>(()=> provider.GetRequiredService<IDeliveryCostsToRecipe>()));
 // Add services to the container.
 
 builder.Services.AddControllers();

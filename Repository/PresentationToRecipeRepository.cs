@@ -9,21 +9,15 @@ public class PresentationToRecipeRepository : IPresentationToRecipe
 {
     private readonly IDbContext _context;
     private readonly IPresentationCostRepository _presentationRepository;
-    private readonly IRecipeRepository _recipeRepository;
-    public PresentationToRecipeRepository(IDbContext context, IPresentationCostRepository presentationRepository, IRecipeRepository recipeRepository)
+    public PresentationToRecipeRepository(IDbContext context, IPresentationCostRepository presentationRepository)
     {
         _context = context;
         _presentationRepository = presentationRepository;
-        _recipeRepository = recipeRepository;
     }
     public PresentationToRecipe CreatePresentationToRecipe(PresentationToRecipe presentationToRecipe)
     {
         try
         {
-            if(!_recipeRepository.RecipeExists(presentationToRecipe.RecipeId))
-            {
-                throw new Exception("Recipe not found");
-            }
             if(!_presentationRepository.PresentationCostExists(presentationToRecipe.PresentationId))
             {
                 throw new Exception("Presentation not found");
