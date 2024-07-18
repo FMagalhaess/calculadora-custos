@@ -13,9 +13,20 @@ public class DeliveryCostToRecipeRepository : IDeliveryCostsToRecipe
             _context = context;
             _deliveryCostRepository = deliveryCostRepository;
         }
-
-    public DeliveryToRecipe CreateDeliveryCostsToRecipe(DeliveryToRecipe deliveryCostsToRecipe)
+    
+    public DeliveryToRecipe CreateInstanceOfDeliveryCostsToRecipe(int RecipeId, int DeliveryCostId)
     {
+        DeliveryToRecipe deliveryCostsToRecipe = new()
+        {
+            RecipeId = RecipeId,
+            DeliveryCostId = DeliveryCostId
+        };
+        return deliveryCostsToRecipe;
+    }
+
+    public DeliveryToRecipe CreateDeliveryCostsToRecipe(int RecipeId, int DeliveryCostId)
+    {
+        DeliveryToRecipe deliveryCostsToRecipe = CreateInstanceOfDeliveryCostsToRecipe(RecipeId, DeliveryCostId);
         try
         {
             if(!_deliveryCostRepository.DeliveryCostExists(deliveryCostsToRecipe.DeliveryCostId))

@@ -30,30 +30,30 @@ public class RecipeRepository : IRecipeRepository
     }
     public Recipe CreateRecipe(InputRecipeFromDTO recipe)
     {
-        try 
+        _ = new Recipe();
+        Recipe? toReturn;
+        try
         {
-            EnsureFields.EnsureNameNotNull(recipe.Name!);
-            EnsureFields.EnsureIngredientsListNotNull(recipe.Ingredients!);
-            EnsureFields.EnsurePreparationListNotNull(recipe.PreparationCostItems!);
-            EnsureFields.EnsurePresentationListNotNull(recipe.PresentationCostItems!);
-            EnsureFields.EnsureDeliveryCostListNotNull(recipe.DeliveryCostItems!);
+            EnsureFields.EnsureFieldsCheckerToCreateRecipe(recipe);
             totalCosts = CalculateTotalCost(recipe);
             sellPrice = recipe.SellPrice ?? totalCosts * 1.2m;
             profitPercentage = CalculateProfitPercentage(totalCosts, sellPrice);
+            toReturn = new Recipe
+            {
+                Name = recipe.Name,
+                Cost = totalCosts,
+                Price = sellPrice,
+                Profit = sellPrice - totalCosts,
+                ProfitPercentage = profitPercentage
+            };
+            _context.Recipes.Add(toReturn);
+            _context.SaveChanges();
         }
         catch (Exception e)
         {
             throw new Exception(e.Message);
         }
-        Recipe toReturn = new()
-        {
-            Id = 1,
-            Name = "Name Placeholder",
-            Cost = totalCosts,
-            Price = sellPrice,
-            Profit = sellPrice - totalCosts,
-            ProfitPercentage = profitPercentage
-        };
+
         return toReturn;
     }
     public decimal CalculateIngredientCost(InputRecipeFromDTO recipe)

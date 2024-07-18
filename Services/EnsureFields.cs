@@ -1,3 +1,4 @@
+using calculadora_custos.DTO;
 using calculadora_custos.Models;
 
 namespace calculadora_custos.Services;
@@ -99,6 +100,32 @@ public static class EnsureFields{
         if (deliveryCosts == null || deliveryCosts.Count == 0)
         {
             throw new Exception("Delivery Costs list is required");
+        }
+    }
+    public static void CheckIfItemListsAreEqual(List<int> list1, List<decimal> list2)
+    {
+        if (list1.Count != list2.Count)
+        {
+            throw new Exception("Lists have different sizes");
+        }
+    }
+    public static void EnsureFieldsCheckerToCreateRecipe(InputRecipeFromDTO recipe)
+    {
+        try
+        {
+            EnsureNameNotNull(recipe.Name!);
+            EnsureIngredientsListNotNull(recipe.Ingredients!);
+            EnsurePreparationListNotNull(recipe.PreparationCostItems!);
+            EnsurePresentationListNotNull(recipe.PresentationCostItems!);
+            EnsureDeliveryCostListNotNull(recipe.DeliveryCostItems!);
+            CheckIfItemListsAreEqual(recipe.Ingredients!, recipe.IngredientsAmount!);
+            CheckIfItemListsAreEqual(recipe.PreparationCostItems!, recipe.PreparationCostItemsAmount!);
+            CheckIfItemListsAreEqual(recipe.PresentationCostItems!, recipe.PresentationCostItemsAmount!);
+            CheckIfItemListsAreEqual(recipe.DeliveryCostItems!, recipe.DeliveryCostItemsAmount!);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
         }
     }
 }

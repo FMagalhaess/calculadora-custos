@@ -21,8 +21,8 @@ public class IngredientRepository : IIngredientRepository
     {
         try
         {
-            EnsureFields.EnsureNameNotNull(ingredient.Name);
-            EnsureFields.EnsureMeasureUnitNotNull(ingredient.MeasurementUnit);
+            EnsureFields.EnsureNameNotNull(ingredient.Name!);
+            EnsureFields.EnsureMeasureUnitNotNull(ingredient.MeasurementUnit!);
             EnsureFields.EnsureTotalAmountNotNegative(ingredient.TotalAmount);
             EnsureFields.EnsureTotalValueNotNegative(ingredient.TotalValue);
             EnsureFields.EnsureDefaultAmountNotNegative(ingredient.DefaultAmount);
