@@ -184,4 +184,20 @@ public class RecipeRepository : IRecipeRepository
 
         return toReturn;
     }
+
+    public List<DeliveryCostReturnedByRecipeDTO> GetPresentationCostsById(int recipeId)
+    {
+        var toReturn = (from r in _context.Recipes
+                        join pcr in _context.PresentationToRecipes on r.Id equals pcr.RecipeId
+                        join pc in _context.PresentationCosts on pcr.PresentationId equals pc.Id
+                        where r.Id == recipeId
+                        select new DeliveryCostReturnedByRecipeDTO
+                        {
+                            Id = pc.Id,
+                            RecipeName = r.Name,
+                            DeliveryCostName = pc.Name,
+                        }).ToList();
+
+        return toReturn;
+    }
 }

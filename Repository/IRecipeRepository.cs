@@ -14,5 +14,6 @@ public interface IRecipeRepository
     List<IngredientReturnedByRecipeIdDTO> IngredientsReturnedByRecipeId(int RecipeId);
     List<DeliveryCostReturnedByRecipeDTO> GetDeliveryCostsById(int recipeId);
     List<DeliveryCostReturnedByRecipeDTO> GetPreparationCostsById(int recipeId);
+    List<DeliveryCostReturnedByRecipeDTO> GetPresentationCostsById(int recipeId);
 
 }
