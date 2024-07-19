@@ -140,7 +140,7 @@ public class RecipeRepository : IRecipeRepository
     }
     public List<IngredientReturnedByRecipeIdDTO> IngredientsReturnedByRecipeId(int recipeId)
 {
-    var toReturn = (from r in _context.Recipes
+    var ingredientsQuerry = from r in _context.Recipes
                     join ir in _context.IngredientToRecipes on r.Id equals ir.RecipeId
                     join i in _context.Ingredients on ir.IngredientId equals i.Id
                     where r.Id == recipeId
@@ -149,7 +149,8 @@ public class RecipeRepository : IRecipeRepository
                         Id = i.Id,
                         RecipeName = r.Name,
                         IngredientName = i.Name,
-                    }).ToList();
+                    };
+    var toReturn = ingredientsQuerry.ToList();
 
     return toReturn;
 }
