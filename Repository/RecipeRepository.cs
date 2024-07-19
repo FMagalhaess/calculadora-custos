@@ -1,7 +1,9 @@
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.X509Certificates;
 using calculadora_custos.DTO;
 using calculadora_custos.Models;
 using calculadora_custos.Services;
+using Microsoft.VisualBasic;
 namespace calculadora_custos.Repository;
 
 public class RecipeRepository : IRecipeRepository
@@ -136,4 +138,19 @@ public class RecipeRepository : IRecipeRepository
     {
         return _context.Recipes.Any(r => r.Id == id);
     }
+    public List<IngredientReturnedByRecipeIdDTO> IngredientsReturnedByRecipeId(int recipeId)
+{
+    var toReturn = (from r in _context.Recipes
+                    join ir in _context.IngredientToRecipes on r.Id equals ir.RecipeId
+                    join i in _context.Ingredients on ir.IngredientId equals i.Id
+                    where r.Id == recipeId
+                    select new IngredientReturnedByRecipeIdDTO
+                    {
+                        Id = i.Id,
+                        RecipeName = r.Name,
+                        IngredientName = i.Name,
+                    }).ToList();
+
+    return toReturn;
+}
 }

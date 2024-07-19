@@ -34,5 +34,19 @@ namespace calculadora_custos.Controllers
                 return BadRequest(e.Message);
             }
         }
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                List<IngredientReturnedByRecipeIdDTO> recipe = _recipeRepository.IngredientsReturnedByRecipeId(id);
+                return Ok(recipe);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

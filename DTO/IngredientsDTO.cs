@@ -20,3 +20,9 @@ public class IngredientFullFromDatabase
     public double ValuePerAmount { get; set; }
     public double DefaultAmount { get; set; }
 }
+public class IngredientReturnedByRecipeIdDTO
+{
+    public int Id { get; set; }
+    public string? RecipeName { get; set; }
+    public string? IngredientName { get; set; }
+}
