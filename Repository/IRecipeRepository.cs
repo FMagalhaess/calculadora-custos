@@ -12,5 +12,7 @@ public interface IRecipeRepository
     decimal CalculateTotalCost(InputRecipeFromDTO recipe);
     bool RecipeExists(int id);
     List<IngredientReturnedByRecipeIdDTO> IngredientsReturnedByRecipeId(int RecipeId);
-    List<DeliveryCostReturnedByRecipeDTO> getDeliveryCostsById(int recipeId);
+    List<DeliveryCostReturnedByRecipeDTO> GetDeliveryCostsById(int recipeId);
+    List<DeliveryCostReturnedByRecipeDTO> GetPreparationCostsById(int recipeId);
+
 }
