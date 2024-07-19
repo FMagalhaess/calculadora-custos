@@ -4,7 +4,8 @@ namespace calculadora_custos.Repository;
 public interface IPreparationToRecipe
 {
     List<PreparationToRecipe> GetPreparationToRecipe();
-    PreparationToRecipe CreatePreparationToRecipe(PreparationToRecipe preparationToRecipe);
+    PreparationToRecipe CreatePreparationToRecipe(int recipeId, int preparationId);
+    PreparationToRecipe CreateInstanceOfPreparationToRecipe(int recipeId, int preparationId);
     void DeletePreparationToRecipe(int id);
     void UpdatePreparationToRecipe(int id, PreparationToRecipe preparationToRecipe);
     bool PreparationToRecipeExists(int id);

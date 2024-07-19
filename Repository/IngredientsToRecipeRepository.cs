@@ -14,23 +14,33 @@ public class IngredientsToRecipeRepository : IIngredientsToRecipe
         _context = context;
         _ingredientRepository = ingredientRepository;
     }
-
-    public IngredientToRecipe CreateIngredientsToRecipe(IngredientToRecipe ingredientsToRecipe)
+    public IngredientToRecipe CreateInstanceOfIngredientsToRecipe(int RecipeId, int IngredientId)
     {
+        IngredientToRecipe ingredientsToRecipe = new()
+        {
+            IngredientId = IngredientId,
+            RecipeId = RecipeId
+        };
+        return ingredientsToRecipe;
+    }
+    public IngredientToRecipe CreateIngredientsToRecipe(int RecipeId, int IngredientId)
+    {
+        IngredientToRecipe ingredientsToRecipe;
         try
         {
-            if(!_ingredientRepository.IngredientExists(ingredientsToRecipe.IngredientId))
+            if(!_ingredientRepository.IngredientExists(IngredientId))
             {
                 throw new Exception("Ingredient not found");
             }
+            ingredientsToRecipe = CreateInstanceOfIngredientsToRecipe(RecipeId, IngredientId);
             _context.IngredientToRecipes.Add(ingredientsToRecipe);
             _context.SaveChanges();
-            return ingredientsToRecipe;
         }
         catch (Exception ex)
         {
             throw new Exception(ex.Message);
         }
+        return ingredientsToRecipe;
     }
 
     public void DeleteIngredientsToRecipe(int id)

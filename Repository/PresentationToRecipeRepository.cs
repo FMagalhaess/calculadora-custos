@@ -14,10 +14,20 @@ public class PresentationToRecipeRepository : IPresentationToRecipe
         _context = context;
         _presentationRepository = presentationRepository;
     }
-    public PresentationToRecipe CreatePresentationToRecipe(PresentationToRecipe presentationToRecipe)
+    public PresentationToRecipe CreateInstanceOfPresentationToRecipe(int recipeId, int presentationId)
+    {
+        PresentationToRecipe presentationToRecipe = new()
+        {
+            RecipeId = recipeId,
+            PresentationId = presentationId
+        };
+        return presentationToRecipe;
+    }
+    public PresentationToRecipe CreatePresentationToRecipe(int recipeId, int presentationId)
     {
         try
         {
+            PresentationToRecipe presentationToRecipe = CreateInstanceOfPresentationToRecipe(recipeId, presentationId);
             if(!_presentationRepository.PresentationCostExists(presentationToRecipe.PresentationId))
             {
                 throw new Exception("Presentation not found");

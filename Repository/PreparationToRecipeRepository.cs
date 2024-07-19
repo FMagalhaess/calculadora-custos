@@ -15,10 +15,20 @@ public class PreparationToRecipeRepository : IPreparationToRecipe
         _preparationRepository = preparationRepository;
     }
 
-    public PreparationToRecipe CreatePreparationToRecipe(PreparationToRecipe preparationToRecipe)
+    public PreparationToRecipe CreateInstanceOfPreparationToRecipe(int recipeId, int preparationId)
+    {
+        PreparationToRecipe preparationToRecipe = new()
+        {
+            RecipeId = recipeId,
+            PreparationId = preparationId
+        };
+        return preparationToRecipe;
+    }
+    public PreparationToRecipe CreatePreparationToRecipe(int recipeId, int preparationId)
     {
         try
         {
+            PreparationToRecipe preparationToRecipe = CreateInstanceOfPreparationToRecipe(recipeId, preparationId);
             if(!_preparationRepository.PreparationCostExists(preparationToRecipe.PreparationId))
             {
                 throw new Exception("Preparation not found");

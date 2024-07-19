@@ -21,6 +21,6 @@ public class PresentationToRecipeController : ControllerBase
     [HttpPost]
     public IActionResult Post([FromBody] PresentationToRecipe presentationToRecipe)
     {
-        return Ok(_presentationToRecipeRepository.CreatePresentationToRecipe(presentationToRecipe));
+        return Ok(_presentationToRecipeRepository.CreatePresentationToRecipe(presentationToRecipe.RecipeId, presentationToRecipe.PresentationId));
     }
 }

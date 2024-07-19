@@ -25,7 +25,7 @@ public class IngredientsToRecipeController : ControllerBase
     {
         try
         {
-            IngredientToRecipe CreatedIngredient = _ingredientToRecipeRepository.CreateIngredientsToRecipe(ingredient);
+            IngredientToRecipe CreatedIngredient = _ingredientToRecipeRepository.CreateIngredientsToRecipe(ingredient.RecipeId, ingredient.IngredientId);
             return Created("", CreatedIngredient);
         }
         catch (Exception e)

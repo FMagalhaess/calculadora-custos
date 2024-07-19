@@ -48,6 +48,22 @@ public class RecipeRepository : IRecipeRepository
             };
             _context.Recipes.Add(toReturn);
             _context.SaveChanges();
+            foreach (var ingredient in recipe.Ingredients!)
+            {
+                _ingredientsToRecipe.CreateIngredientsToRecipe(toReturn.Id, ingredient);
+            }
+            foreach (var preparation in recipe.PreparationCostItems!)
+            {
+                _preparationToRecipe.CreatePreparationToRecipe(toReturn.Id, preparation);
+            }
+            foreach (var presentation in recipe.PresentationCostItems!)
+            {
+                _presentationToRecipe.CreatePresentationToRecipe(toReturn.Id, presentation);
+            }
+            foreach (var delivery in recipe.DeliveryCostItems!)
+            {
+                _deliveryCostsToRecipe.CreateDeliveryCostsToRecipe(toReturn.Id, delivery);
+            }
         }
         catch (Exception e)
         {
