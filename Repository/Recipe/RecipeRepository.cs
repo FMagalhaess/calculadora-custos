@@ -201,4 +201,13 @@ public class RecipeRepository : IRecipeRepository
 
         return toReturn;
     }
+
+    public Recipe GetRecipeById(int id)
+    {
+        if (!RecipeExists(id))
+        {
+            throw new Exception("Recipe not found");
+        }
+        return _context.Recipes.FirstOrDefault(r => r.Id == id);
+    }
 }

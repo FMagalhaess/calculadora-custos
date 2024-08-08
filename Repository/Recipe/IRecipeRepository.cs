@@ -4,6 +4,7 @@ namespace calculadora_custos.Repository;
 public interface IRecipeRepository
 {
     List<Recipe> GetRecipes();
+    Recipe GetRecipeById(int id);
     Recipe CreateRecipe(InputRecipeFromDTO recipe);
     decimal CalculateIngredientCost(InputRecipeFromDTO recipe);
     decimal CalculatePreparationCost(InputRecipeFromDTO recipe);
