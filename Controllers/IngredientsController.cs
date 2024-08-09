@@ -33,4 +33,18 @@ public class IngredientsController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+    [HttpPut]
+    [Route("{id}")]
+    public IActionResult Update(string id, [FromBody] Ingredient ingredient)
+    {
+        try
+        {
+            _IngredientRepository.UpdateIngredient(id, ingredient);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 }

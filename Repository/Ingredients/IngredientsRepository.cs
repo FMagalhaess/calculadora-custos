@@ -45,9 +45,22 @@ public class IngredientRepository : IIngredientRepository
     }
 
 
-    public void UpdateIngredient(int id, Ingredient ingredient)
+    public void UpdateIngredient(string id, Ingredient ingredient)
     {
-        throw new NotImplementedException();
+        try
+        {
+            int.TryParse(id, out int idToSearch);
+            ingredient.Id = idToSearch;
+            if(IngredientExists(idToSearch))
+            {
+                _context.Ingredients.Update(ingredient);
+                _context.SaveChanges();
+            }
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
     }
 
     public bool IngredientExists(int id)
