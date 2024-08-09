@@ -45,7 +45,12 @@ namespace calculadora_custos.Repository
 
         public void UpdateDeliveryCost(int id, DeliveryCost deliveryCost)
         {
-            throw new NotImplementedException();
+            deliveryCost.Id = id;
+            if(DeliveryCostExists(id))
+            {
+                _context.DeliveryCosts.Update(deliveryCost);
+                _context.SaveChanges();
+            }
         }
     }
 }

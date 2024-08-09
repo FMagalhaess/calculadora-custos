@@ -33,4 +33,19 @@ public class DeliveryCostController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+    [HttpPut]
+    [Route("{id}")]
+    public IActionResult Update(string id, [FromBody] DeliveryCost deliveryCost)
+    {
+        try
+        {
+            int.TryParse(id, out int idToSearch);
+            _deliveryCostRepository.UpdateDeliveryCost(idToSearch, deliveryCost);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 }
