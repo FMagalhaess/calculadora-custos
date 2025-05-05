@@ -25,8 +25,8 @@ public class IngredientsController : ControllerBase
     {
         try
         {
-            Ingredient CreatedIngredient = _IngredientRepository.CreateIngredient(ingredient);
-            return Created("", CreatedIngredient);
+            Ingredient createdIngredient = _IngredientRepository.CreateIngredient(ingredient);
+            return Created("", createdIngredient);
         }
         catch (Exception e)
         {
@@ -39,8 +39,23 @@ public class IngredientsController : ControllerBase
     {
         try
         {
-            _IngredientRepository.UpdateIngredient(id, ingredient);
-            return Ok();
+            Ingredient updateIngredient = _IngredientRepository.UpdateIngredient(id, ingredient);
+            return Ok(updateIngredient);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public IActionResult Delete(string id)
+    {
+        try
+        {
+            _IngredientRepository.DeleteIngredient(id);
+            return NoContent();
         }
         catch (Exception e)
         {

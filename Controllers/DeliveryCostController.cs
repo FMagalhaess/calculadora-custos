@@ -25,8 +25,8 @@ public class DeliveryCostController : ControllerBase
     {
         try
         {
-            DeliveryCost CreatedRecipe = _deliveryCostRepository.CreateDeliveryCost(deliveryCost);
-            return Created("", CreatedRecipe);
+            DeliveryCost createdRecipe = _deliveryCostRepository.CreateDeliveryCost(deliveryCost);
+            return Created("", createdRecipe);
         }
         catch (Exception e)
         {

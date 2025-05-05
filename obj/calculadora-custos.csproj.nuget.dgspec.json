@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/filipe/Documentos/Hamburgueria/calculadora-custos/calculadora-custos.csproj": {}
+    "C:\\Users\\Filipe\\RiderProjects\\calculadora-custos\\calculadora-custos.csproj": {}
   },
   "projects": {
-    "/home/filipe/Documentos/Hamburgueria/calculadora-custos/calculadora-custos.csproj": {
+    "C:\\Users\\Filipe\\RiderProjects\\calculadora-custos\\calculadora-custos.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/filipe/Documentos/Hamburgueria/calculadora-custos/calculadora-custos.csproj",
+        "projectUniqueName": "C:\\Users\\Filipe\\RiderProjects\\calculadora-custos\\calculadora-custos.csproj",
         "projectName": "calculadora-custos",
-        "projectPath": "/home/filipe/Documentos/Hamburgueria/calculadora-custos/calculadora-custos.csproj",
-        "packagesPath": "/home/filipe/.nuget/packages/",
-        "outputPath": "/home/filipe/Documentos/Hamburgueria/calculadora-custos/obj/",
+        "projectPath": "C:\\Users\\Filipe\\RiderProjects\\calculadora-custos\\calculadora-custos.csproj",
+        "packagesPath": "C:\\Users\\Filipe\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Filipe\\RiderProjects\\calculadora-custos\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/filipe/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Filipe\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -32,6 +32,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -69,7 +74,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -81,7 +87,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.132/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403\\RuntimeIdentifierGraph.json"
         }
       }
     }

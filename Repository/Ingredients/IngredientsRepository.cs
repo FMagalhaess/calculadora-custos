@@ -39,28 +39,46 @@ public class IngredientRepository : IIngredientRepository
     }
 
 
-    public void DeleteIngredient(int id)
+    public void DeleteIngredient(string id)
     {
-        throw new NotImplementedException();
+        try
+        {
+            int.TryParse(id, out int ingredientId);
+            if (!IngredientExists(ingredientId))
+            {
+                throw new Exception($"id {ingredientId} not found");
+            }
+
+            _context.Ingredients.Find(ingredientId);
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        
     }
 
 
-    public void UpdateIngredient(string id, Ingredient ingredient)
+    public Ingredient UpdateIngredient(string id, Ingredient ingredient)
     {
         try
         {
             int.TryParse(id, out int idToSearch);
             ingredient.Id = idToSearch;
-            if(IngredientExists(idToSearch))
+            if(!IngredientExists(idToSearch))
             {
-                _context.Ingredients.Update(ingredient);
-                _context.SaveChanges();
+                throw new Exception($"id {idToSearch} not found");
             }
         }
         catch (Exception e)
         {
             throw new Exception(e.Message);
         }
+        _context.Ingredients.Update(ingredient);
+        _context.SaveChanges();
+        return ingredient;
     }
 
     public bool IngredientExists(int id)
