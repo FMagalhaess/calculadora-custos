@@ -23,15 +23,17 @@ namespace calculadora_custos.Repository
         public DbSet<PresentationToRecipe> PresentationToRecipes { get; set; }
         public DbSet<PreparationToRecipe> PreparationToRecipes { get; set; }
         public DbSet<DeliveryToRecipe> DeliveryToRecipes { get; set; }
+        public DbSet<CostItem> CostItems { get; set; }
+        public DbSet<VariableCost> VariableCost { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-        {
-            var connectionString = "Server=127.0.0.1;Database=calculadora-custos;User=SA;Password=SqlServerSenhaSegura123!;TrustServerCertificate=True;";
+            {
+                var connectionString = "Server=127.0.0.1;Database=calculadora-custos;User=SA;Password=SqlServerSenhaSegura123!;TrustServerCertificate=True;";
 
-            optionsBuilder.UseSqlServer(connectionString);
-        }
+                optionsBuilder.UseSqlServer(connectionString);
+            }
 
         }
     }

@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("f9f1ac13-108d-4539-ba92-af021662d661")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("calculadora-custos")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d55e1210a2e92b4a5f5b3563ad062478cfae29c6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a8b2a5914504ca38ad01abe0ad6a741866880b04")]
 [assembly: System.Reflection.AssemblyProductAttribute("calculadora-custos")]
 [assembly: System.Reflection.AssemblyTitleAttribute("calculadora-custos")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

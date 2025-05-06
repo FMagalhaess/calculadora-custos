@@ -1,8 +1,15 @@
 using calculadora_custos.DTO;
 using calculadora_custos.Models;
+using calculadora_custos.Results;
 
 namespace calculadora_custos.Services;
 public static class EnsureFields{
+    public static Result<string> NotNullOrEmpty(string value, string fieldName)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return Result<string>.Fail($"{fieldName} cannot be null or empty.");
+        return Result<string>.Ok(value);
+    }
     public static void EnsureNameNotNull(string name)
     {
         if (name == null || name.Trim() == "")
@@ -10,6 +17,23 @@ public static class EnsureFields{
             throw new Exception("Name is required");
         }
     }
+
+    public static void EnsureEmailNotNull(string email)
+    {
+        if (email == null || email.Trim() == "")
+        {
+            throw new Exception("Email is required");
+        }
+    }
+
+    public static void EnsurePasswordNotNull(string password)
+    {
+        if (password == null || password.Trim() == "")
+        {
+            throw new Exception("Password is required");
+        }
+    }
+
     public static void EnsureMeasureUnitNotNull(string MeasurementUnit)
     {
         if (MeasurementUnit == null || MeasurementUnit.Trim() == "")
