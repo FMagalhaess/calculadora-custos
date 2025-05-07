@@ -28,7 +28,7 @@ public class IngredientsController : BaseForControllerWithJwt
     public IActionResult Create([FromBody] Ingredient ingredient )
     {
         ingredient.UserId = CurrentUserId;
-        Ingredient createdIngredient = _IngredientRepository.CreateIngredient(ingredient);
+        Result<Ingredient> createdIngredient = _IngredientRepository.CreateIngredient(ingredient);
         return Created("", createdIngredient);
     }
     

@@ -1,6 +1,8 @@
 using calculadora_custos.Models;
 using calculadora_custos.DTO;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using calculadora_custos.Results;
 using calculadora_custos.Services;
 
 namespace calculadora_custos.Repository;
@@ -17,22 +19,30 @@ public class IngredientRepository : IIngredientRepository
         return _context.Ingredients.ToList();
     }
 
-    public Ingredient CreateIngredient(Ingredient ingredient)
+    public Result<Ingredient> CreateIngredient(Ingredient ingredient)
     {
-        EnsureFields.NotNullOrEmpty(ingredient.Name, "ingredient name");
-        EnsureFields.NotNullOrEmpty(ingredient.MeasurementUnit, "Measurement unit");
-        EnsureFields.EnsureMeasurementUnitIsValid(ingredient.MeasurementUnit);
-        // EnsureFields.EnsureNotNegativeOrZero(ingredient.TotalAmount, "Total amount");
-        
-        EnsureFields.EnsureTotalAmountNotNegative(ingredient.TotalAmount);
-        EnsureFields.EnsureTotalValueNotNegative(ingredient.TotalValue);
-        EnsureFields.EnsureDefaultAmountNotNegative(ingredient.DefaultAmount);
-        ingredient.ValuePerAmount = EnsureFields.DivedeTotalAmountByTotalValueToGetVPA(ingredient);
+        Result<string> validation = ValidateIngredientFoCreation(ingredient);
+        if (validation.IsSuccess != true)
+            return Result<Ingredient>.Fail(validation.Error);
+
+        ingredient.ValuePerAmount = EnsureFields.DivedeTotalAmountByTotalValueToGetValuePerAmount(ingredient);
 
         _context.Ingredients.Add(ingredient);
         _context.SaveChanges();
-        return ingredient;
+        return Result<Ingredient>.Ok(ingredient);
         
+    }
+
+    private static Result<string> ValidateIngredientFoCreation(Ingredient ingredient)
+    {
+        return EnsureFields.RunValidations(
+            EnsureFields.NotNullOrEmpty(ingredient.Name!, "ingredient name"),
+            EnsureFields.NotNullOrEmpty(ingredient.MeasurementUnit!, "Measurement unit"),
+            EnsureFields.EnsureMeasurementUnitIsValid(ingredient.MeasurementUnit!),
+            EnsureFields.EnsureNotNegativeOrZero(ingredient.TotalAmount, "Total amount"),
+            EnsureFields.EnsureNotNegativeOrZero(ingredient.TotalValue, "TotalValue"),
+            EnsureFields.EnsureNotNegativeOrZero(ingredient.DefaultAmount, "DefaultAmount")
+        );
     }
 
 

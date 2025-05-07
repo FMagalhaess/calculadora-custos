@@ -5,6 +5,12 @@ using calculadora_custos.Results;
 
 namespace calculadora_custos.Services;
 public static class EnsureFields{
+
+    public static Result<string> RunValidations(params Result<string>[] validations)
+    {
+        return validations.FirstOrDefault(v => !v.IsSuccess)
+                      ?? Result<string>.Ok("All validations passed.");
+    }
     public static Result<string> NotNullOrEmpty(string value, string fieldName)
     {
         return (string.IsNullOrWhiteSpace(value)) ? Result<string>.Fail($"{fieldName} cannot be null or empty.") : Result<string>.Ok(value);
@@ -12,20 +18,21 @@ public static class EnsureFields{
 
     public static Result<string> EnsureMeasurementUnitIsValid(string measurementUnit)
     {
-        if (measurementUnit.Trim() != "Kg"
-            && measurementUnit.Trim() != "g"
-            && measurementUnit.Trim() != "L"
-            && measurementUnit.Trim() != "mL"
-            && measurementUnit.Trim() != "un")
+        Span<string> validMeasurementUnit = ["Kg", "g", "L", "mL", "un"];
+        foreach (var m in validMeasurementUnit)
         {
-            return Result<string>.Fail("measurement unit is not valid.");
+            if (m == measurementUnit.Trim())
+            {
+                return Result<string>.Ok("pass");
+            }
         }
-        return Result<string>.Ok(measurementUnit);
+
+        return Result<string>.Fail("measurement unit is not valid.");
     }
 
     public static Result<string> EnsureNotNegativeOrZero<T>(T value, string fieldName) where T : INumber<T>
     {
-        return value <= T.Zero ? Result<string>.Fail($"{fieldName} cannot be negative.") : Result<string>.Ok((value).ToString());
+        return value <= T.Zero ? Result<string>.Fail($"{fieldName} cannot be negative or zero.") : Result<string>.Ok((value).ToString());
     }
 
     public static void EnsureNameNotNull(string name)
@@ -88,29 +95,17 @@ public static class EnsureFields{
             throw new Exception("Default Amount must be greater than 0");
         }
     }
-    public static double DivedeTotalAmountByTotalValueToGetVPA(Ingredient ingredient)
+    public static double DivedeTotalAmountByTotalValueToGetValuePerAmount(Ingredient ingredient)
     {
-        if (ingredient.MeasurementUnit == "un")
+        return ingredient.MeasurementUnit switch
         {
-            return ingredient.TotalValue;
-        }
-        if (ingredient.MeasurementUnit == "Kg")
-        {
-            return ingredient.TotalValue;
-        }
-        if (ingredient.MeasurementUnit == "g")
-        {
-            return ProportionalRule(ingredient.TotalAmount, ingredient.TotalValue, 1000);
-        }
-        if (ingredient.MeasurementUnit == "L")
-        {
-            return ingredient.TotalValue;
-        }
-        if (ingredient.MeasurementUnit == "mL")
-        {
-            return ProportionalRule(ingredient.TotalAmount, ingredient.TotalValue, 1000);
-        }
-        return 0;
+            "un" => ingredient.TotalValue,
+            "kg" => ingredient.TotalValue,
+            "g" => ProportionalRule(ingredient.TotalAmount, ingredient.TotalValue, 1000),
+            "L" => ingredient.TotalValue,
+            "mL" => ProportionalRule(ingredient.TotalAmount, ingredient.TotalValue, 1000),
+            _ => ingredient.TotalValue
+        };
     }
     public static double ProportionalRule(double knownWeight, double knownPrice, double desiredWeight)
     {
