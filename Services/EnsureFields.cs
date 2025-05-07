@@ -1,3 +1,4 @@
+using System.Numerics;
 using calculadora_custos.DTO;
 using calculadora_custos.Models;
 using calculadora_custos.Results;
@@ -22,12 +23,10 @@ public static class EnsureFields{
         return Result<string>.Ok(measurementUnit);
     }
 
-    // public static Result<string> EnsureNotNegativeOrZero<T>(T value, string fieldName) where T : IComparable
-    // {
-    //     double number;
-    //     if (number = Convert.ToDouble(value))
-    //     return value <= 0 ? Result<string>.Fail($"{fieldName} cannot be negative.") : Result<string>.Ok((value).ToString());
-    // }
+    public static Result<string> EnsureNotNegativeOrZero<T>(T value, string fieldName) where T : INumber<T>
+    {
+        return value <= T.Zero ? Result<string>.Fail($"{fieldName} cannot be negative.") : Result<string>.Ok((value).ToString());
+    }
 
     public static void EnsureNameNotNull(string name)
     {
