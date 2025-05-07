@@ -2,6 +2,7 @@ using calculadora_custos.Helper;
 using calculadora_custos.Models;
 using calculadora_custos.Results;
 using calculadora_custos.Services;
+using calculadora_custos.Services.JWT;
 using Microsoft.EntityFrameworkCore;
 
 namespace calculadora_custos.Repository;

@@ -1,12 +1,37 @@
+using System.Text;
 using calculadora_custos.Models;
 using calculadora_custos.Repository;
+using calculadora_custos.Services.JWT;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 using (var db = new MyContext())
 {
     db.Database.EnsureCreated();
 }
 var builder = WebApplication.CreateBuilder(args);
+
+var jwtConfig = builder.Configuration.GetSection("JwtSettings");
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = jwtConfig.GetValue<string>("Issuer"),
+        ValidAudience = jwtConfig.GetValue<string>("Audience"),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.GetValue<string>("SecretKey"))),
+    };
+});
 
 builder.Services.AddDbContext<MyContext>();
 builder.Services.AddScoped<IDbContext, MyContext>();
@@ -20,11 +45,11 @@ builder.Services.AddScoped<IPresentationToRecipe, PresentationToRecipeRepository
 builder.Services.AddScoped<IPreparationToRecipe, PreparationToRecipeRepository>();
 builder.Services.AddScoped<IIngredientsToRecipe, IngredientsToRecipeRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 // Add services to the container.
-
+builder.Services.AddAuthorization();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -36,9 +61,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+ 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
