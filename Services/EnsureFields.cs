@@ -6,10 +6,29 @@ namespace calculadora_custos.Services;
 public static class EnsureFields{
     public static Result<string> NotNullOrEmpty(string value, string fieldName)
     {
-        if (string.IsNullOrWhiteSpace(value))
-            return Result<string>.Fail($"{fieldName} cannot be null or empty.");
-        return Result<string>.Ok(value);
+        return (string.IsNullOrWhiteSpace(value)) ? Result<string>.Fail($"{fieldName} cannot be null or empty.") : Result<string>.Ok(value);
     }
+
+    public static Result<string> EnsureMeasurementUnitIsValid(string measurementUnit)
+    {
+        if (measurementUnit.Trim() != "Kg"
+            && measurementUnit.Trim() != "g"
+            && measurementUnit.Trim() != "L"
+            && measurementUnit.Trim() != "mL"
+            && measurementUnit.Trim() != "un")
+        {
+            return Result<string>.Fail("measurement unit is not valid.");
+        }
+        return Result<string>.Ok(measurementUnit);
+    }
+
+    // public static Result<string> EnsureNotNegativeOrZero<T>(T value, string fieldName) where T : IComparable
+    // {
+    //     double number;
+    //     if (number = Convert.ToDouble(value))
+    //     return value <= 0 ? Result<string>.Fail($"{fieldName} cannot be negative.") : Result<string>.Ok((value).ToString());
+    // }
+
     public static void EnsureNameNotNull(string name)
     {
         if (name == null || name.Trim() == "")

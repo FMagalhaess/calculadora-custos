@@ -19,19 +19,16 @@ public class IngredientRepository : IIngredientRepository
 
     public Ingredient CreateIngredient(Ingredient ingredient)
     {
-        try
-        {
-            EnsureFields.EnsureNameNotNull(ingredient.Name!);
-            EnsureFields.EnsureMeasureUnitNotNull(ingredient.MeasurementUnit!);
-            EnsureFields.EnsureTotalAmountNotNegative(ingredient.TotalAmount);
-            EnsureFields.EnsureTotalValueNotNegative(ingredient.TotalValue);
-            EnsureFields.EnsureDefaultAmountNotNegative(ingredient.DefaultAmount);
-            ingredient.ValuePerAmount = EnsureFields.DivedeTotalAmountByTotalValueToGetVPA(ingredient);
-        }
-        catch (Exception e)
-        {
-            throw new Exception(e.Message);
-        }
+        EnsureFields.NotNullOrEmpty(ingredient.Name, "ingredient name");
+        EnsureFields.NotNullOrEmpty(ingredient.MeasurementUnit, "Measurement unit");
+        EnsureFields.EnsureMeasurementUnitIsValid(ingredient.MeasurementUnit);
+        // EnsureFields.EnsureNotNegativeOrZero(ingredient.TotalAmount, "Total amount");
+        
+        EnsureFields.EnsureTotalAmountNotNegative(ingredient.TotalAmount);
+        EnsureFields.EnsureTotalValueNotNegative(ingredient.TotalValue);
+        EnsureFields.EnsureDefaultAmountNotNegative(ingredient.DefaultAmount);
+        ingredient.ValuePerAmount = EnsureFields.DivedeTotalAmountByTotalValueToGetVPA(ingredient);
+
         _context.Ingredients.Add(ingredient);
         _context.SaveChanges();
         return ingredient;
