@@ -1,12 +1,16 @@
+using System.Security.Claims;
 using calculadora_custos.Models;
 using calculadora_custos.Repository;
+using calculadora_custos.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace calculadora_custos.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class IngredientsController : ControllerBase
+public class IngredientsController : BaseForControllerWithJwt
 {
     private readonly IIngredientRepository _IngredientRepository;
     public IngredientsController(IIngredientRepository ingredientRepository)
@@ -19,20 +23,16 @@ public class IngredientsController : ControllerBase
     {
         return Ok(_IngredientRepository.GetIngredients());
     }
-
+    [Authorize]
     [HttpPost]
     public IActionResult Create([FromBody] Ingredient ingredient )
     {
-        try
-        {
-            Ingredient createdIngredient = _IngredientRepository.CreateIngredient(ingredient);
-            return Created("", createdIngredient);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
+        ingredient.UserId = CurrentUserId;
+        Ingredient createdIngredient = _IngredientRepository.CreateIngredient(ingredient);
+        return Created("", createdIngredient);
     }
+    
+    [Authorize]
     [HttpPut]
     [Route("{id}")]
     public IActionResult Update(string id, [FromBody] Ingredient ingredient)
