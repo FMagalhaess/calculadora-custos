@@ -7,30 +7,42 @@ using calculadora_custos.Services;
 
 namespace calculadora_custos.Repository;
 
-public class IngredientRepository : IIngredientRepository
+public class IngredientRepository(IDbContext context) : IIngredientRepository
 {
-    private readonly IDbContext _context;
-    public IngredientRepository(IDbContext context)
-    {
-        _context = context;
-    }
     public List<Ingredient> GetIngredients()
     {
-        return _context.Ingredients.ToList();
+        return context.Ingredients.ToList();
     }
 
     public Result<Ingredient> CreateIngredient(Ingredient ingredient)
     {
-        Result<string> validation = ValidateIngredientFoCreation(ingredient);
+        var validation = ValidateIngredientFoCreation(ingredient);
         if (validation.IsSuccess != true)
             return Result<Ingredient>.Fail(validation.Error);
 
-        ingredient.ValuePerAmount = EnsureFields.DivedeTotalAmountByTotalValueToGetValuePerAmount(ingredient);
+        ingredient.ValuePerAmount = DivideTotalAmountByTotalValueToGetValuePerAmount(ingredient);
 
-        _context.Ingredients.Add(ingredient);
-        _context.SaveChanges();
+        context.Ingredients.Add(ingredient);
+        context.SaveChanges();
         return Result<Ingredient>.Ok(ingredient);
         
+    }
+    private static double DivideTotalAmountByTotalValueToGetValuePerAmount(Ingredient ingredient)
+    {
+        return ingredient.MeasurementUnit switch
+        {
+            "un" => ingredient.TotalValue,
+            "kg" => ingredient.TotalValue,
+            "g" => ProportionalRule(ingredient.TotalAmount, ingredient.TotalValue, 1000),
+            "L" => ingredient.TotalValue,
+            "mL" => ProportionalRule(ingredient.TotalAmount, ingredient.TotalValue, 1000),
+            _ => ingredient.TotalValue
+        };
+    }
+    
+    private static double ProportionalRule(double knownWeight, double knownPrice, double desiredWeight)
+    {
+        return knownPrice * desiredWeight / knownWeight;
     }
 
     private static Result<string> ValidateIngredientFoCreation(Ingredient ingredient)
@@ -56,7 +68,7 @@ public class IngredientRepository : IIngredientRepository
                 throw new Exception($"id {ingredientId} not found");
             }
 
-            _context.Ingredients.Find(ingredientId);
+            context.Ingredients.Find(ingredientId);
             
         }
         catch (Exception e)
@@ -83,13 +95,13 @@ public class IngredientRepository : IIngredientRepository
         {
             throw new Exception(e.Message);
         }
-        _context.Ingredients.Update(ingredient);
-        _context.SaveChanges();
+        context.Ingredients.Update(ingredient);
+        context.SaveChanges();
         return ingredient;
     }
 
     public bool IngredientExists(int id)
     {
-        return _context.Ingredients.Any(i => i.Id == id);
+        return context.Ingredients.Any(i => i.Id == id);
     }
 }

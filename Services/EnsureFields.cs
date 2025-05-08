@@ -95,22 +95,7 @@ public static class EnsureFields{
             throw new Exception("Default Amount must be greater than 0");
         }
     }
-    public static double DivedeTotalAmountByTotalValueToGetValuePerAmount(Ingredient ingredient)
-    {
-        return ingredient.MeasurementUnit switch
-        {
-            "un" => ingredient.TotalValue,
-            "kg" => ingredient.TotalValue,
-            "g" => ProportionalRule(ingredient.TotalAmount, ingredient.TotalValue, 1000),
-            "L" => ingredient.TotalValue,
-            "mL" => ProportionalRule(ingredient.TotalAmount, ingredient.TotalValue, 1000),
-            _ => ingredient.TotalValue
-        };
-    }
-    public static double ProportionalRule(double knownWeight, double knownPrice, double desiredWeight)
-    {
-        return knownPrice * desiredWeight / knownWeight;
-    }
+    
     public static void EnsureIngredientsListNotNull(List<int> ingredients)
     {
         if (ingredients == null || ingredients.Count == 0)

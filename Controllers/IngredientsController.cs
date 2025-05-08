@@ -10,25 +10,20 @@ namespace calculadora_custos.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class IngredientsController : BaseForControllerWithJwt
+public class IngredientsController(IIngredientRepository ingredientRepository) : BaseForControllerWithJwt
 {
-    private readonly IIngredientRepository _IngredientRepository;
-    public IngredientsController(IIngredientRepository ingredientRepository)
-    {
-        _IngredientRepository = ingredientRepository;
-    }
-
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok(_IngredientRepository.GetIngredients());
+        return Ok(ingredientRepository.GetIngredients());
     }
     [Authorize]
     [HttpPost]
     public IActionResult Create([FromBody] Ingredient ingredient )
     {
+        // this current id come from "BaseForControllerWithJwt"
         ingredient.UserId = CurrentUserId;
-        Result<Ingredient> createdIngredient = _IngredientRepository.CreateIngredient(ingredient);
+        Result<Ingredient> createdIngredient = ingredientRepository.CreateIngredient(ingredient);
         return Created("", createdIngredient);
     }
     
@@ -39,7 +34,7 @@ public class IngredientsController : BaseForControllerWithJwt
     {
         try
         {
-            Ingredient updateIngredient = _IngredientRepository.UpdateIngredient(id, ingredient);
+            Ingredient updateIngredient = ingredientRepository.UpdateIngredient(id, ingredient);
             return Ok(updateIngredient);
         }
         catch (Exception e)
@@ -47,14 +42,15 @@ public class IngredientsController : BaseForControllerWithJwt
             return BadRequest(e.Message);
         }
     }
-
+    
+    [Authorize]
     [HttpDelete]
     [Route("{id}")]
     public IActionResult Delete(string id)
     {
         try
         {
-            _IngredientRepository.DeleteIngredient(id);
+            ingredientRepository.DeleteIngredient(id);
             return NoContent();
         }
         catch (Exception e)
