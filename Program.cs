@@ -1,6 +1,8 @@
 using System.Text;
 using calculadora_custos.Models;
 using calculadora_custos.Repository;
+using calculadora_custos.Repository.FixedCosts;
+using calculadora_custos.Repository.VariableCosts;
 using calculadora_custos.Services.JWT;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +48,8 @@ builder.Services.AddScoped<IPreparationToRecipe, PreparationToRecipeRepository>(
 builder.Services.AddScoped<IIngredientsToRecipe, IngredientsToRecipeRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IFixedCostsRepository, FixedCostsRepository>();
+builder.Services.AddScoped<IVariableCostsRepository, VariableCostsRepository>();
 
 // Add services to the container.
 builder.Services.AddAuthorization();

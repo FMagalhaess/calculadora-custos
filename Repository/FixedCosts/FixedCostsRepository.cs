@@ -1,22 +1,23 @@
 using calculadora_custos.Models;
 using calculadora_custos.Results;
 using calculadora_custos.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace calculadora_custos.Repository.FixedCosts;
 
 public class FixedCostsRepository(IDbContext context) : IFixedCostsRepository
 {
-    public Result<List<FixedCost>> GetFixedCost()
+    public async Task<Result<List<FixedCost>>> GetAllFixedCost()
     {
-        return Result<List<FixedCost>>.Ok(context.FixedCosts.ToList());
+        return Result<List<FixedCost>>.Ok(await context.FixedCosts.ToListAsync());
     }
 
-    public Result<FixedCost> CreateFixedCost(FixedCost fixedCost)
+    public async Task<Result<FixedCost>> CreateFixedCost(FixedCost fixedCost)
     {
         var validation = ValideFixedCost(fixedCost);
         if (validation.IsSuccess != true)
             return Result<FixedCost>.Fail(validation.Error);
-        context.FixedCosts.Add(fixedCost);
+        await context.FixedCosts.AddAsync(fixedCost);
         context.SaveChanges();
         return Result<FixedCost>.Ok(fixedCost);
     }
@@ -24,8 +25,8 @@ public class FixedCostsRepository(IDbContext context) : IFixedCostsRepository
     private static Result<string> ValideFixedCost(FixedCost fixedCost)
     {
         return EnsureFields.RunValidations(
-                EnsureFields.NotNullOrEmpty(fixedCost.Category!, "Category"),
                 EnsureFields.NotNullOrEmpty(fixedCost.Name!, "Name"),
+                EnsureFields.NotNullOrEmpty(fixedCost.Category!, "Category"),
                 EnsureFields.EnsureNotNegativeOrZero(fixedCost.Cost, "Cost"),
                 EnsureFields.EnsureNotNegativeOrZero(fixedCost.MonthlyFrequency, "Monthly frequency")
             );
