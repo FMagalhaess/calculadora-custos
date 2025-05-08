@@ -48,14 +48,11 @@ public class IngredientsController(IIngredientRepository ingredientRepository) :
     [Route("{id}")]
     public IActionResult Delete(string id)
     {
-        try
-        {
-            ingredientRepository.DeleteIngredient(id);
-            return NoContent();
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
+        
+        var deleteIngredient = ingredientRepository.DeleteIngredient(id);
+        if (!deleteIngredient.IsSuccess)
+            return BadRequest(deleteIngredient.Error);
+        return NoContent();
+       
     }
 }

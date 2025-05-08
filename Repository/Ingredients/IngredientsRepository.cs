@@ -58,24 +58,23 @@ public class IngredientRepository(IDbContext context) : IIngredientRepository
     }
 
 
-    public void DeleteIngredient(string id)
+    public Result<Ingredient> DeleteIngredient(string id)
     {
-        try
+        if (!int.TryParse(id, out var ingredientId))
         {
-            int.TryParse(id, out int ingredientId);
-            if (!IngredientExists(ingredientId))
-            {
-                throw new Exception($"id {ingredientId} not found");
-            }
+            return Result<Ingredient>.Fail("Ingredient Id must be a number.");
+        }
 
-            context.Ingredients.Find(ingredientId);
-            
-        }
-        catch (Exception e)
+        if (!IngredientExists(ingredientId))
         {
-            Console.WriteLine(e);
-            throw;
+            return Result<Ingredient>.Fail($"Ingredient with id: {id} does not exist.");
         }
+
+        var ingredient = context.Ingredients.Find(ingredientId);
+        ingredient!.DeletedAt = DateTime.Now;
+        context.Ingredients.Update(ingredient);
+        context.SaveChanges();
+        return Result<Ingredient>.Ok(ingredient);
         
     }
 
