@@ -15,5 +15,6 @@ public interface IDbContext
         public DbSet<PresentationToRecipe> PresentationToRecipes { get; set; }
         public DbSet<PreparationToRecipe> PreparationToRecipes { get; set; }
         public DbSet<DeliveryToRecipe> DeliveryToRecipes { get; set; }
+        public DbSet<VariableCost> VariableCost { get; set; }
         public int SaveChanges();
 }

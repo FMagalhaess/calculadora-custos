@@ -15,7 +15,6 @@ public static class EnsureFields{
     {
         return (string.IsNullOrWhiteSpace(value)) ? Result<string>.Fail($"{fieldName} cannot be null or empty.") : Result<string>.Ok(value);
     }
-
     public static Result<string> EnsureMeasurementUnitIsValid(string measurementUnit)
     {
         Span<string> validMeasurementUnit = ["Kg", "g", "L", "mL", "un"];

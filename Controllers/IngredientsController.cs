@@ -1,10 +1,8 @@
-using System.Security.Claims;
 using calculadora_custos.Models;
 using calculadora_custos.Repository;
 using calculadora_custos.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace calculadora_custos.Controllers;
 
