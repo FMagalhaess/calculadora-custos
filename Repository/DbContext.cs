@@ -1,5 +1,7 @@
 using calculadora_custos.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+
 
 namespace calculadora_custos.Repository
 {
@@ -36,5 +38,45 @@ namespace calculadora_custos.Repository
             }
 
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                // somente tipos que implementam ISoftDeletable
+                if (!typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType))
+                    continue;
+
+                // param ‘e’ do tipo da entidade (ex: FixedCost e)
+                var parameter = Expression.Parameter(entityType.ClrType, "e");
+
+                // método EF.Property<DateTime?>(...)
+                var propertyMethod = typeof(EF)
+                    .GetMethod(nameof(EF.Property), new[] { typeof(object), typeof(string) })
+                    !.MakeGenericMethod(typeof(DateTime?));
+
+                // expressao: EF.Property<DateTime?>(e, "DeletedAt")
+                var deletedAtProperty = Expression.Call(
+                    propertyMethod,
+                    parameter,
+                    Expression.Constant(nameof(ISoftDeletable.DeletedAt))
+                );
+
+                // expressao: EF.Property<DateTime?>(e, "DeletedAt") == null
+                var compareToNull = Expression.Equal(
+                    deletedAtProperty,
+                    Expression.Constant(null, typeof(DateTime?))
+                );
+
+                // lambda: e => EF.Property<DateTime?>(e, "DeletedAt") == null
+                var lambda = Expression.Lambda(compareToNull, parameter);
+
+                // finalmente, registra o filtro global
+                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+            }
+
+            base.OnModelCreating(modelBuilder);
+        }
+
     }
 }
