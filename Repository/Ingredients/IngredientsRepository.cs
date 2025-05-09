@@ -1,62 +1,80 @@
 using calculadora_custos.Models;
 using calculadora_custos.DTO;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using calculadora_custos.Results;
 using calculadora_custos.Services;
 
 namespace calculadora_custos.Repository;
 
-public class IngredientRepository : IIngredientRepository
+public class IngredientRepository(IDbContext context) : IIngredientRepository
 {
-    private readonly IDbContext _context;
-    public IngredientRepository(IDbContext context)
-    {
-        _context = context;
-    }
     public List<Ingredient> GetIngredients()
     {
-        return _context.Ingredients.ToList();
+        return context.Ingredients.ToList();
     }
 
-    public Ingredient CreateIngredient(Ingredient ingredient)
+    public Result<Ingredient> CreateIngredient(Ingredient ingredient)
     {
-        try
-        {
-            EnsureFields.EnsureNameNotNull(ingredient.Name!);
-            EnsureFields.EnsureMeasureUnitNotNull(ingredient.MeasurementUnit!);
-            EnsureFields.EnsureTotalAmountNotNegative(ingredient.TotalAmount);
-            EnsureFields.EnsureTotalValueNotNegative(ingredient.TotalValue);
-            EnsureFields.EnsureDefaultAmountNotNegative(ingredient.DefaultAmount);
-            ingredient.ValuePerAmount = EnsureFields.DivedeTotalAmountByTotalValueToGetVPA(ingredient);
-        }
-        catch (Exception e)
-        {
-            throw new Exception(e.Message);
-        }
-        _context.Ingredients.Add(ingredient);
-        _context.SaveChanges();
-        return ingredient;
+        var validation = ValidateIngredientFoCreation(ingredient);
+        if (validation.IsSuccess != true)
+            return Result<Ingredient>.Fail(validation.Error);
+
+        ingredient.ValuePerAmount = DivideTotalAmountByTotalValueToGetValuePerAmount(ingredient);
+
+        context.Ingredients.Add(ingredient);
+        context.SaveChanges();
+        return Result<Ingredient>.Ok(ingredient);
         
     }
-
-
-    public void DeleteIngredient(string id)
+    private static double DivideTotalAmountByTotalValueToGetValuePerAmount(Ingredient ingredient)
     {
-        try
+        return ingredient.MeasurementUnit switch
         {
-            int.TryParse(id, out int ingredientId);
-            if (!IngredientExists(ingredientId))
-            {
-                throw new Exception($"id {ingredientId} not found");
-            }
+            "un" => ingredient.TotalValue,
+            "kg" => ingredient.TotalValue,
+            "g" => ProportionalRule(ingredient.TotalAmount, ingredient.TotalValue, 1000),
+            "L" => ingredient.TotalValue,
+            "mL" => ProportionalRule(ingredient.TotalAmount, ingredient.TotalValue, 1000),
+            _ => ingredient.TotalValue
+        };
+    }
+    
+    private static double ProportionalRule(double knownWeight, double knownPrice, double desiredWeight)
+    {
+        return knownPrice * desiredWeight / knownWeight;
+    }
 
-            _context.Ingredients.Find(ingredientId);
-            
-        }
-        catch (Exception e)
+    private static Result<string> ValidateIngredientFoCreation(Ingredient ingredient)
+    {
+        return EnsureFields.RunValidations(
+            EnsureFields.NotNullOrEmpty(ingredient.Name!, "ingredient name"),
+            EnsureFields.NotNullOrEmpty(ingredient.MeasurementUnit!, "Measurement unit"),
+            EnsureFields.EnsureMeasurementUnitIsValid(ingredient.MeasurementUnit!),
+            EnsureFields.EnsureNotNegativeOrZero(ingredient.TotalAmount, "Total amount"),
+            EnsureFields.EnsureNotNegativeOrZero(ingredient.TotalValue, "TotalValue"),
+            EnsureFields.EnsureNotNegativeOrZero(ingredient.DefaultAmount, "DefaultAmount")
+        );
+    }
+
+
+    public Result<Ingredient> DeleteIngredient(string id)
+    {
+        if (!int.TryParse(id, out var ingredientId))
         {
-            Console.WriteLine(e);
-            throw;
+            return Result<Ingredient>.Fail("Ingredient Id must be a number.");
         }
+
+        if (!IngredientExists(ingredientId))
+        {
+            return Result<Ingredient>.Fail($"Ingredient with id: {id} does not exist.");
+        }
+
+        var ingredient = context.Ingredients.Find(ingredientId);
+        ingredient!.DeletedAt = DateTime.Now;
+        context.Ingredients.Update(ingredient);
+        context.SaveChanges();
+        return Result<Ingredient>.Ok(ingredient);
         
     }
 
@@ -76,13 +94,13 @@ public class IngredientRepository : IIngredientRepository
         {
             throw new Exception(e.Message);
         }
-        _context.Ingredients.Update(ingredient);
-        _context.SaveChanges();
+        context.Ingredients.Update(ingredient);
+        context.SaveChanges();
         return ingredient;
     }
 
     public bool IngredientExists(int id)
     {
-        return _context.Ingredients.Any(i => i.Id == id);
+        return context.Ingredients.Any(i => i.Id == id);
     }
 }

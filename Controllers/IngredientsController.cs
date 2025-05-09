@@ -1,45 +1,38 @@
 using calculadora_custos.Models;
 using calculadora_custos.Repository;
+using calculadora_custos.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace calculadora_custos.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class IngredientsController : ControllerBase
+public class IngredientsController(IIngredientRepository ingredientRepository) : BaseForControllerWithJwt
 {
-    private readonly IIngredientRepository _IngredientRepository;
-    public IngredientsController(IIngredientRepository ingredientRepository)
-    {
-        _IngredientRepository = ingredientRepository;
-    }
-
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok(_IngredientRepository.GetIngredients());
+        return Ok(ingredientRepository.GetIngredients());
     }
-
+    [Authorize]
     [HttpPost]
     public IActionResult Create([FromBody] Ingredient ingredient )
     {
-        try
-        {
-            Ingredient createdIngredient = _IngredientRepository.CreateIngredient(ingredient);
-            return Created("", createdIngredient);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
+        // this current id come from "BaseForControllerWithJwt"
+        ingredient.UserId = CurrentUserId;
+        Result<Ingredient> createdIngredient = ingredientRepository.CreateIngredient(ingredient);
+        return Created("", createdIngredient);
     }
+    
+    [Authorize]
     [HttpPut]
     [Route("{id}")]
     public IActionResult Update(string id, [FromBody] Ingredient ingredient)
     {
         try
         {
-            Ingredient updateIngredient = _IngredientRepository.UpdateIngredient(id, ingredient);
+            Ingredient updateIngredient = ingredientRepository.UpdateIngredient(id, ingredient);
             return Ok(updateIngredient);
         }
         catch (Exception e)
@@ -47,19 +40,17 @@ public class IngredientsController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
+    
+    [Authorize]
     [HttpDelete]
     [Route("{id}")]
     public IActionResult Delete(string id)
     {
-        try
-        {
-            _IngredientRepository.DeleteIngredient(id);
-            return NoContent();
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
+        
+        var deleteIngredient = ingredientRepository.DeleteIngredient(id);
+        if (!deleteIngredient.IsSuccess)
+            return BadRequest(deleteIngredient.Error);
+        return NoContent();
+       
     }
 }
