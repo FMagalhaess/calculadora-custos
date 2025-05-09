@@ -8,8 +8,11 @@ public class Recipe
     
     [Column(TypeName = "varchar(100)")]
     public string? Name { get; set; }
+    [Column(TypeName = "decimal(19,4)")]
     public decimal Cost { get; set; }
-    public decimal Price { get; set; }
+    [Column(TypeName = "decimal(19,4)")]
+    public decimal SellPrice { get; set; }
+    [Column(TypeName = "decimal(19,4)")]
     public decimal Profit { get; set; }
     public decimal ProfitPercentage { get; set; }
 }

@@ -1,6 +1,7 @@
 using calculadora_custos.DTO;
 using calculadora_custos.Models;
 using calculadora_custos.Repository;
+using calculadora_custos.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace calculadora_custos.Controllers
@@ -39,15 +40,10 @@ namespace calculadora_custos.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] InputRecipeFromDTO recipe)
         {
-            try
-            {
-                Recipe createdRecipe = _recipeRepository.CreateRecipe(recipe);
-                return Ok(createdRecipe);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+            var createdRecipe = _recipeRepository.CreateRecipe(recipe);
+            if (!createdRecipe.IsSuccess)
+                return BadRequest(Result<Recipe>.Fail(createdRecipe.Error));
+            return Ok(createdRecipe);
         }
         [HttpGet]
         [Route("ingredients/{id}")]
@@ -63,47 +59,47 @@ namespace calculadora_custos.Controllers
                 return BadRequest(e.Message);
             }
         }
-        [HttpGet]
-        [Route("delivery/{id}")]
-        public IActionResult GetDeliveryCosts(int id)
-        {
-            try
-            {
-                List<DeliveryCostReturnedByRecipeDTO> recipe = _recipeRepository.GetDeliveryCostsById(id);
-                return Ok(recipe);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-        [HttpGet]
-        [Route("preparation/{id}")]
-        public IActionResult GetPreparationCosts(int id)
-        {
-            try
-            {
-                List<DeliveryCostReturnedByRecipeDTO> recipe = _recipeRepository.GetPreparationCostsById(id);
-                return Ok(recipe);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-        [HttpGet]
-        [Route("presentation/{id}")]
-        public IActionResult GetPresentationCosts(int id)
-        {
-            try
-            {
-                List<DeliveryCostReturnedByRecipeDTO> recipe = _recipeRepository.GetPresentationCostsById(id);
-                return Ok(recipe);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
+        // [HttpGet]
+        // [Route("delivery/{id}")]
+        // public IActionResult GetDeliveryCosts(int id)
+        // {
+        //     try
+        //     {
+        //         List<DeliveryCostReturnedByRecipeDTO> recipe = _recipeRepository.GetDeliveryCostsById(id);
+        //         return Ok(recipe);
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         return BadRequest(e.Message);
+        //     }
+        // }
+        // [HttpGet]
+        // [Route("preparation/{id}")]
+        // public IActionResult GetPreparationCosts(int id)
+        // {
+        //     try
+        //     {
+        //         List<DeliveryCostReturnedByRecipeDTO> recipe = _recipeRepository.GetPreparationCostsById(id);
+        //         return Ok(recipe);
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         return BadRequest(e.Message);
+        //     }
+        // }
+        // [HttpGet]
+        // [Route("presentation/{id}")]
+        // public IActionResult GetPresentationCosts(int id)
+        // {
+        //     try
+        //     {
+        //         List<DeliveryCostReturnedByRecipeDTO> recipe = _recipeRepository.GetPresentationCostsById(id);
+        //         return Ok(recipe);
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         return BadRequest(e.Message);
+        //     }
+        // }
     }
 }

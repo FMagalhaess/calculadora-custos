@@ -94,59 +94,18 @@ public static class EnsureFields{
             throw new Exception("Default Amount must be greater than 0");
         }
     }
+
+    public static Result<string> EnsureListNotNullOrEmpty<T>(IList<T> list, string fieldName)
+    {
+        if (list == null! || list.Count == 0)
+        {
+            return Result<string>.Fail($"{fieldName} cannot be null or empty.");
+        }
+        return Result<string>.Ok("Pass");
+    }
     
-    public static void EnsureIngredientsListNotNull(List<int> ingredients)
+    public static Result<string> CheckIfItemListsAreEqualRr(List<int> list1, List<decimal> list2)
     {
-        if (ingredients == null || ingredients.Count == 0)
-        {
-            throw new Exception("Ingredients list is required");
-        }
-    }
-    public static void EnsurePreparationListNotNull(List<int> preparations)
-    {
-        if (preparations == null || preparations.Count == 0)
-        {
-            throw new Exception("Preparations list is required");
-        }
-    }
-    public static void EnsurePresentationListNotNull(List<int> presentations)
-    {
-        if (presentations == null || presentations.Count == 0)
-        {
-            throw new Exception("Presentations list is required");
-        }
-    }
-    public static void EnsureDeliveryCostListNotNull(List<int> deliveryCosts)
-    {
-        if (deliveryCosts == null || deliveryCosts.Count == 0)
-        {
-            throw new Exception("Delivery Costs list is required");
-        }
-    }
-    public static void CheckIfItemListsAreEqual(List<int> list1, List<decimal> list2)
-    {
-        if (list1.Count != list2.Count)
-        {
-            throw new Exception("Lists have different sizes");
-        }
-    }
-    public static void EnsureFieldsCheckerToCreateRecipe(InputRecipeFromDTO recipe)
-    {
-        try
-        {
-            EnsureNameNotNull(recipe.Name!);
-            EnsureIngredientsListNotNull(recipe.Ingredients!);
-            EnsurePreparationListNotNull(recipe.PreparationCostItems!);
-            EnsurePresentationListNotNull(recipe.PresentationCostItems!);
-            EnsureDeliveryCostListNotNull(recipe.DeliveryCostItems!);
-            CheckIfItemListsAreEqual(recipe.Ingredients!, recipe.IngredientsAmount!);
-            CheckIfItemListsAreEqual(recipe.PreparationCostItems!, recipe.PreparationCostItemsAmount!);
-            CheckIfItemListsAreEqual(recipe.PresentationCostItems!, recipe.PresentationCostItemsAmount!);
-            CheckIfItemListsAreEqual(recipe.DeliveryCostItems!, recipe.DeliveryCostItemsAmount!);
-        }
-        catch (Exception e)
-        {
-            throw new Exception(e.Message);
-        }
+        return list1.Count == list2.Count ? Result<string>.Ok("Pass") : Result<string>.Fail("Lists have different sizes");
     }
 }
