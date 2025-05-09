@@ -1,35 +1,24 @@
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Cryptography.X509Certificates;
 using calculadora_custos.DTO;
 using calculadora_custos.Models;
 using calculadora_custos.Results;
 using calculadora_custos.Services;
-using Microsoft.VisualBasic;
 namespace calculadora_custos.Repository;
 
 public class RecipeRepository : IRecipeRepository
 {
     private readonly IDbContext _context;
     private readonly IIngredientsToRecipe _ingredientsToRecipe;
-    private readonly IPreparationToRecipe _preparationToRecipe;
-    private readonly IPresentationToRecipe _presentationToRecipe;
-    private readonly IDeliveryCostsToRecipe _deliveryCostsToRecipe;
     private Result<decimal> totalCosts;
     private decimal sellPrice;
     private decimal profitPercentage;
 
     public RecipeRepository(
         IDbContext context,
-        IIngredientsToRecipe ingredientsToRecipe,
-        IPreparationToRecipe preparationToRecipe,
-        IPresentationToRecipe presentationToRecipe,
-        IDeliveryCostsToRecipe deliveryCostsToRecipe)
+        IIngredientsToRecipe ingredientsToRecipe
+        )
     {
         _context = context;
         _ingredientsToRecipe = ingredientsToRecipe;
-        _preparationToRecipe = preparationToRecipe;
-        _presentationToRecipe = presentationToRecipe;
-        _deliveryCostsToRecipe = deliveryCostsToRecipe;
     }
     public Result<Recipe> CreateRecipe(InputRecipeFromDTO recipe)
     {
@@ -130,69 +119,21 @@ public class RecipeRepository : IRecipeRepository
         return _context.Recipes.Any(r => r.Id == id);
     }
     public List<IngredientReturnedByRecipeIdDTO> IngredientsReturnedByRecipeId(int recipeId)
-{
-    var ingredientsQuerry = from r in _context.Recipes
-                    join ir in _context.IngredientToRecipes on r.Id equals ir.RecipeId
-                    join i in _context.Ingredients on ir.IngredientId equals i.Id
-                    where r.Id == recipeId
-                    select new IngredientReturnedByRecipeIdDTO
-                    {
-                        Id = i.Id,
-                        RecipeName = r.Name,
-                        IngredientName = i.Name,
-                    };
-    var toReturn = ingredientsQuerry.ToList();
-
-    return toReturn;
-}
-    public List<DeliveryCostReturnedByRecipeDTO> GetDeliveryCostsById(int recipeId)
     {
-        var toReturn = (from r in _context.Recipes
-                        join dcr in _context.DeliveryToRecipes on r.Id equals dcr.RecipeId
-                        join dc in _context.DeliveryCosts on dcr.DeliveryCostId equals dc.Id
+        var ingredientsQuerry = from r in _context.Recipes
+                        join ir in _context.IngredientToRecipes on r.Id equals ir.RecipeId
+                        join i in _context.Ingredients on ir.IngredientId equals i.Id
                         where r.Id == recipeId
-                        select new DeliveryCostReturnedByRecipeDTO
+                        select new IngredientReturnedByRecipeIdDTO
                         {
-                            Id = dc.Id,
+                            Id = i.Id,
                             RecipeName = r.Name,
-                            DeliveryCostName = dc.Name,
-                        }).ToList();
+                            IngredientName = i.Name,
+                        };
+        var toReturn = ingredientsQuerry.ToList();
 
         return toReturn;
     }
-
-    public List<DeliveryCostReturnedByRecipeDTO> GetPreparationCostsById(int recipeId)
-    {
-        var toReturn = (from r in _context.Recipes
-                        join pcr in _context.PreparationToRecipes on r.Id equals pcr.RecipeId
-                        join pc in _context.PreparationCosts on pcr.PreparationId equals pc.Id
-                        where r.Id == recipeId
-                        select new DeliveryCostReturnedByRecipeDTO
-                        {
-                            Id = pc.Id,
-                            RecipeName = r.Name,
-                            DeliveryCostName = pc.Name,
-                        }).ToList();
-
-        return toReturn;
-    }
-
-    public List<DeliveryCostReturnedByRecipeDTO> GetPresentationCostsById(int recipeId)
-    {
-        var toReturn = (from r in _context.Recipes
-                        join pcr in _context.PresentationToRecipes on r.Id equals pcr.RecipeId
-                        join pc in _context.PresentationCosts on pcr.PresentationId equals pc.Id
-                        where r.Id == recipeId
-                        select new DeliveryCostReturnedByRecipeDTO
-                        {
-                            Id = pc.Id,
-                            RecipeName = r.Name,
-                            DeliveryCostName = pc.Name,
-                        }).ToList();
-
-        return toReturn;
-    }
-
     public Recipe GetRecipeById(int id)
     {
         if (!RecipeExists(id))

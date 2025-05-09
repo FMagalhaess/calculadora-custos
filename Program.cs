@@ -38,13 +38,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddDbContext<MyContext>();
 builder.Services.AddScoped<IDbContext, MyContext>();
 builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
-builder.Services.AddScoped<IDeliveryCostRepository, DeliveryCostRepository>();
-builder.Services.AddScoped<IPresentationCostRepository, PresentationCostRepository>();
-builder.Services.AddScoped<IPreparationCostRepository, PreparationCostRepository>();
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
-builder.Services.AddScoped<IDeliveryCostsToRecipe, DeliveryCostToRecipeRepository>();
-builder.Services.AddScoped<IPresentationToRecipe, PresentationToRecipeRepository>();
-builder.Services.AddScoped<IPreparationToRecipe, PreparationToRecipeRepository>();
 builder.Services.AddScoped<IIngredientsToRecipe, IngredientsToRecipeRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
