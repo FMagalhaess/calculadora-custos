@@ -403,3 +403,5 @@ FodyWeavers.xsd
 
 # Compiler analysis files
 *.sarif
+/.idea/.idea.calculadora-custos/.idea/indexLayout.xml
+/.idea/.idea.calculadora-custos/.idea/workspace.xml
