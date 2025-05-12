@@ -11,28 +11,28 @@ namespace calculadora_custos.Controllers;
 public class IngredientsController(IIngredientRepository ingredientRepository) : BaseForControllerWithJwt
 {
     [HttpGet]
-    public IActionResult Get()
+    public async Task<IActionResult> Get()
     {
-        return Ok(ingredientRepository.GetIngredients());
+        return Ok(await ingredientRepository.GetIngredients());
     }
     [Authorize]
     [HttpPost]
-    public IActionResult Create([FromBody] Ingredient ingredient )
+    public async Task<IActionResult> Create([FromBody] Ingredient ingredient )
     {
         // this current id come from "BaseForControllerWithJwt"
         ingredient.UserId = CurrentUserId;
-        Result<Ingredient> createdIngredient = ingredientRepository.CreateIngredient(ingredient);
+        Result<Ingredient> createdIngredient = await ingredientRepository.CreateIngredient(ingredient);
         return Created("", createdIngredient);
     }
     
     [Authorize]
     [HttpPut]
     [Route("{id}")]
-    public IActionResult Update(string id, [FromBody] Ingredient ingredient)
+    public async Task<IActionResult> Update(string id, [FromBody] Ingredient ingredient)
     {
         var userId = CurrentUserId;
         ingredient.UserId = userId;
-        Result<Ingredient> updateIngredient = ingredientRepository.UpdateIngredient(id, ingredient);
+        Result<Ingredient> updateIngredient = await ingredientRepository.UpdateIngredient(id, ingredient);
         if (!updateIngredient.IsSuccess)
             return BadRequest(Result<Ingredient>.Fail(updateIngredient.Error));
         return Ok(updateIngredient);
@@ -42,10 +42,10 @@ public class IngredientsController(IIngredientRepository ingredientRepository) :
     [Authorize]
     [HttpDelete]
     [Route("{id}")]
-    public IActionResult Delete(string id)
+    public async Task<IActionResult> Delete(string id)
     {
         
-        var deleteIngredient = ingredientRepository.DeleteIngredient(id);
+        var deleteIngredient = await ingredientRepository.DeleteIngredient(id);
         if (!deleteIngredient.IsSuccess)
             return BadRequest(deleteIngredient.Error);
         return NoContent();

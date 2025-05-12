@@ -4,58 +4,66 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using calculadora_custos.Results;
 using calculadora_custos.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace calculadora_custos.Repository;
 
 public class IngredientRepository(IDbContext context) : IIngredientRepository
 {
-    public List<Ingredient> GetIngredients()
+    public async Task<List<Ingredient>> GetIngredients()
     {
-        return context.Ingredients.ToList();
+        return await context.Ingredients.ToListAsync();
     }
 
-    public Result<Ingredient> CreateIngredient(Ingredient ingredient)
+    public async Task<Result<Ingredient>> CreateIngredient(Ingredient ingredient)
     {
-        var validation = ValidateIngredientFoCreation(ingredient);
+        var validation = ValidateIngredient(ingredient);
         if (validation.IsSuccess != true)
             return Result<Ingredient>.Fail(validation.Error);
 
         ingredient.ValuePerAmount = DivideTotalAmountByTotalValueToGetValuePerAmount(ingredient);
 
-        context.Ingredients.Add(ingredient);
-        context.SaveChanges();
-        return Result<Ingredient>.Ok(ingredient);
+        await context.Ingredients.AddAsync(ingredient);
+        await context.SaveChangesAsync();
         
+        return Result<Ingredient>.Ok(ingredient);
     }
     
-    public Result<Ingredient> UpdateIngredient(string id, Ingredient ingredient)
+    public async Task<Result<Ingredient>> UpdateIngredient(string id, Ingredient ingredient)
     {
-        int.TryParse(id, out int idToSearch);
+        if(!int.TryParse(id, out int idToSearch))
+            return Result<Ingredient>.Fail("Invalid Id");
+        
+        var valide = ValidateIngredient(ingredient);
+        if (valide.IsSuccess != true)
+            return Result<Ingredient>.Fail(valide.Error);
+        
         ingredient.Id = idToSearch;
+        
         if(!IngredientExists(idToSearch))
         {
             return Result<Ingredient>.Fail("Ingredient not found");
         }
+        
         context.Ingredients.Update(ingredient);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
+        
         return Result<Ingredient>.Ok(ingredient);
     }
-    public Result<Ingredient> DeleteIngredient(string id)
+    public async Task<Result<Ingredient>> DeleteIngredient(string id)
     {
         if (!int.TryParse(id, out var ingredientId))
-        {
             return Result<Ingredient>.Fail("Ingredient Id must be a number.");
-        }
 
         if (!IngredientExists(ingredientId))
-        {
             return Result<Ingredient>.Fail($"Ingredient with id: {id} does not exist.");
-        }
 
-        var ingredient = context.Ingredients.Find(ingredientId);
+        var ingredient = await context.Ingredients.FindAsync(ingredientId);
         ingredient!.DeletedAt = DateTime.Now;
+        
         context.Ingredients.Update(ingredient);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
+        
         return Result<Ingredient>.Ok(ingredient);
         
     }
@@ -77,7 +85,7 @@ public class IngredientRepository(IDbContext context) : IIngredientRepository
         return knownPrice * desiredWeight / knownWeight;
     }
 
-    private static Result<string> ValidateIngredientFoCreation(Ingredient ingredient)
+    private static Result<string> ValidateIngredient(Ingredient ingredient)
     {
         return EnsureFields.RunValidations(
             EnsureFields.NotNullOrEmpty(ingredient.Name!, "ingredient name"),
