@@ -27,6 +27,38 @@ public class IngredientRepository(IDbContext context) : IIngredientRepository
         return Result<Ingredient>.Ok(ingredient);
         
     }
+    
+    public Result<Ingredient> UpdateIngredient(string id, Ingredient ingredient)
+    {
+        int.TryParse(id, out int idToSearch);
+        ingredient.Id = idToSearch;
+        if(!IngredientExists(idToSearch))
+        {
+            return Result<Ingredient>.Fail("Ingredient not found");
+        }
+        context.Ingredients.Update(ingredient);
+        context.SaveChanges();
+        return Result<Ingredient>.Ok(ingredient);
+    }
+    public Result<Ingredient> DeleteIngredient(string id)
+    {
+        if (!int.TryParse(id, out var ingredientId))
+        {
+            return Result<Ingredient>.Fail("Ingredient Id must be a number.");
+        }
+
+        if (!IngredientExists(ingredientId))
+        {
+            return Result<Ingredient>.Fail($"Ingredient with id: {id} does not exist.");
+        }
+
+        var ingredient = context.Ingredients.Find(ingredientId);
+        ingredient!.DeletedAt = DateTime.Now;
+        context.Ingredients.Update(ingredient);
+        context.SaveChanges();
+        return Result<Ingredient>.Ok(ingredient);
+        
+    }
     private static double DivideTotalAmountByTotalValueToGetValuePerAmount(Ingredient ingredient)
     {
         return ingredient.MeasurementUnit switch
@@ -57,47 +89,7 @@ public class IngredientRepository(IDbContext context) : IIngredientRepository
         );
     }
 
-
-    public Result<Ingredient> DeleteIngredient(string id)
-    {
-        if (!int.TryParse(id, out var ingredientId))
-        {
-            return Result<Ingredient>.Fail("Ingredient Id must be a number.");
-        }
-
-        if (!IngredientExists(ingredientId))
-        {
-            return Result<Ingredient>.Fail($"Ingredient with id: {id} does not exist.");
-        }
-
-        var ingredient = context.Ingredients.Find(ingredientId);
-        ingredient!.DeletedAt = DateTime.Now;
-        context.Ingredients.Update(ingredient);
-        context.SaveChanges();
-        return Result<Ingredient>.Ok(ingredient);
-        
-    }
-
-
-    public Ingredient UpdateIngredient(string id, Ingredient ingredient)
-    {
-        try
-        {
-            int.TryParse(id, out int idToSearch);
-            ingredient.Id = idToSearch;
-            if(!IngredientExists(idToSearch))
-            {
-                throw new Exception($"id {idToSearch} not found");
-            }
-        }
-        catch (Exception e)
-        {
-            throw new Exception(e.Message);
-        }
-        context.Ingredients.Update(ingredient);
-        context.SaveChanges();
-        return ingredient;
-    }
+    
 
     public bool IngredientExists(int id)
     {

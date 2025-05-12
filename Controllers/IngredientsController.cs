@@ -30,15 +30,13 @@ public class IngredientsController(IIngredientRepository ingredientRepository) :
     [Route("{id}")]
     public IActionResult Update(string id, [FromBody] Ingredient ingredient)
     {
-        try
-        {
-            Ingredient updateIngredient = ingredientRepository.UpdateIngredient(id, ingredient);
-            return Ok(updateIngredient);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
+        var userId = CurrentUserId;
+        ingredient.UserId = userId;
+        Result<Ingredient> updateIngredient = ingredientRepository.UpdateIngredient(id, ingredient);
+        if (!updateIngredient.IsSuccess)
+            return BadRequest(Result<Ingredient>.Fail(updateIngredient.Error));
+        return Ok(updateIngredient);
+
     }
     
     [Authorize]
