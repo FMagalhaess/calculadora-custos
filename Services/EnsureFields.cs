@@ -26,7 +26,7 @@ public static class EnsureFields{
             }
         }
 
-        return Result<string>.Fail("measurement unit is not valid.");
+        return Result<string>.Fail($"measurement unit must be one of: {measurementUnit}.");
     }
 
     public static Result<string> EnsureNotNegativeOrZero<T>(T value, string fieldName) where T : INumber<T>
