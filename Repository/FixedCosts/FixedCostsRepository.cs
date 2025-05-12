@@ -22,6 +22,40 @@ public class FixedCostsRepository(IDbContext context) : IFixedCostsRepository
         return Result<FixedCost>.Ok(fixedCost);
     }
 
+    public async Task<Result<FixedCost>> UpdateFixedCost(string id, FixedCost fixedCost)
+    {
+        if(!int.TryParse(id, out int fixedCostId))
+           return Result<FixedCost>.Fail("conversion failed");
+        if (!await FixedCostExists(fixedCostId))
+            return Result<FixedCost>.Fail($"id {fixedCostId} not found");
+        
+        fixedCost.Id = fixedCostId;
+        
+        context.FixedCosts.Update(fixedCost);
+        context.SaveChanges();
+        
+        return Result<FixedCost>.Ok(fixedCost);
+    }
+    
+    public async Task<Result<FixedCost>> DeleteFixedCost(string id)
+    {
+        if(!int.TryParse(id, out int fixedCostId))
+            return Result<FixedCost>.Fail("conversion failed");
+        
+        var toDelete = await context.FixedCosts.FindAsync(fixedCostId);
+        if(toDelete == null)
+            return Result<FixedCost>.Fail($"id {fixedCostId} not found");
+        
+        context.FixedCosts.Remove(toDelete);
+        context.SaveChanges();
+        return Result<FixedCost>.Ok(toDelete);
+    }
+
+    private async Task<bool> FixedCostExists(int id)
+    {
+        return await context.FixedCosts.AnyAsync(fixedCost => fixedCost.Id == id);
+    }
+
     private static Result<string> ValideFixedCost(FixedCost fixedCost)
     {
         return EnsureFields.RunValidations(
