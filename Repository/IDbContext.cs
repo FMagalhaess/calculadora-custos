@@ -11,4 +11,5 @@ public interface IDbContext
         public DbSet<IngredientToRecipe> IngredientToRecipes { get; set; }
         public DbSet<VariableCost> VariableCost { get; set; }
         public int SaveChanges();
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
