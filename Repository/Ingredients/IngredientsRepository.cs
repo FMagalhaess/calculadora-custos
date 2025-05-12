@@ -1,7 +1,4 @@
 using calculadora_custos.Models;
-using calculadora_custos.DTO;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using calculadora_custos.Results;
 using calculadora_custos.Services;
 using Microsoft.EntityFrameworkCore;

@@ -7,8 +7,12 @@ namespace calculadora_custos.Models
     public class User
     {   
         public Guid Id { get; set; }
+        
+        [Column(TypeName = "varchar(100)")]
         public string? Name { get; set; }
+        [Column(TypeName = "varchar(100)")]
         public string? Email { get; set; }
+        [Column(TypeName = "varchar(100)")]
         public string? Password { get; set; }
     }
 }

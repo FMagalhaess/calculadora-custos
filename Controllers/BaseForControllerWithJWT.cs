@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using calculadora_custos.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace calculadora_custos.Controllers;

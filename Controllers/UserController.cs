@@ -1,7 +1,6 @@
 using calculadora_custos.Models;
 using calculadora_custos.Repository;
 using calculadora_custos.Results;
-using calculadora_custos.Services;
 using calculadora_custos.Services.JWT;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,9 +24,9 @@ public class UserController : ControllerBase
     public async Task<IActionResult> Login([FromBody] User user)
     {
         
-        Result<User> finded = await _userRepository.Login(user.Email, user.Password);
+        Result<User> found = await _userRepository.Login(user.Email!, user.Password!);
         
-        var token = _tokenService.GenerateToken((finded.Data.Id).ToString());
+        var token = _tokenService.GenerateToken((found.Data!.Id).ToString());
         return Ok(new { token = $"Bearer {token}" });
     }
 

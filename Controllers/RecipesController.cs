@@ -38,7 +38,7 @@ namespace calculadora_custos.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Create([FromBody] InputRecipeFromDTO recipe)
+        public IActionResult Create([FromBody] InputRecipeFromDto recipe)
         {
             var createdRecipe = _recipeRepository.CreateRecipe(recipe);
             if (!createdRecipe.IsSuccess)
@@ -51,7 +51,7 @@ namespace calculadora_custos.Controllers
         {
             try
             {
-                List<IngredientReturnedByRecipeIdDTO> recipe = _recipeRepository.IngredientsReturnedByRecipeId(id);
+                List<IngredientReturnedByRecipeIdDto> recipe = _recipeRepository.IngredientsReturnedByRecipeId(id);
                 return Ok(recipe);
             }
             catch (Exception e)

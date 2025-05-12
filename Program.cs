@@ -1,11 +1,9 @@
 using System.Text;
-using calculadora_custos.Models;
 using calculadora_custos.Repository;
 using calculadora_custos.Repository.FixedCosts;
 using calculadora_custos.Repository.VariableCosts;
 using calculadora_custos.Services.JWT;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 using (var db = new MyContext())

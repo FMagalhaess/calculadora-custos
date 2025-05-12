@@ -20,7 +20,7 @@ public class RecipeRepository : IRecipeRepository
         _context = context;
         _ingredientsToRecipe = ingredientsToRecipe;
     }
-    public Result<Recipe> CreateRecipe(InputRecipeFromDTO recipe)
+    public Result<Recipe> CreateRecipe(InputRecipeFromDto recipe)
     {
         var validation = ValideRecipeCreation(recipe);
         if (!validation.IsSuccess)
@@ -42,7 +42,7 @@ public class RecipeRepository : IRecipeRepository
         return Result<Recipe>.Ok(toReturn);
     }
 
-    private static Result<string> ValideRecipeCreation(InputRecipeFromDTO recipe)
+    private static Result<string> ValideRecipeCreation(InputRecipeFromDto recipe)
     {
         return EnsureFields.RunValidations(
             EnsureFields.NotNullOrEmpty(recipe.Name!, "Name"),
@@ -52,7 +52,7 @@ public class RecipeRepository : IRecipeRepository
             );
     }
 
-    private Result<decimal> CalculateIngredientCost(InputRecipeFromDTO recipe)
+    private Result<decimal> CalculateIngredientCost(InputRecipeFromDto recipe)
     {
         decimal totalCost = 0;
         foreach (var ingredient in recipe.Ingredients!)
@@ -118,13 +118,13 @@ public class RecipeRepository : IRecipeRepository
     {
         return _context.Recipes.Any(r => r.Id == id);
     }
-    public List<IngredientReturnedByRecipeIdDTO> IngredientsReturnedByRecipeId(int recipeId)
+    public List<IngredientReturnedByRecipeIdDto> IngredientsReturnedByRecipeId(int recipeId)
     {
         var ingredientsQuerry = from r in _context.Recipes
                         join ir in _context.IngredientToRecipes on r.Id equals ir.RecipeId
                         join i in _context.Ingredients on ir.IngredientId equals i.Id
                         where r.Id == recipeId
-                        select new IngredientReturnedByRecipeIdDTO
+                        select new IngredientReturnedByRecipeIdDto
                         {
                             Id = i.Id,
                             RecipeName = r.Name,
