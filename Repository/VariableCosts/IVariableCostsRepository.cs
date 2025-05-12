@@ -8,4 +8,5 @@ public interface IVariableCostsRepository
     Task<List<VariableCost>> GetAllVariableCosts();
     Task<Result<VariableCost>> CreateVariableCost(VariableCost variableCost);
     Task<Result<VariableCost>> Delete(string variableCostId);
+    Task<Result<VariableCost>> UpdateVariableCost(string id, VariableCost variableCost);    
 }

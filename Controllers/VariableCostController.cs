@@ -38,4 +38,17 @@ public class VariableCostController(IVariableCostsRepository variableCostsReposi
         await variableCostsRepository.Delete(id);
         return NoContent();
     }
+
+    [Authorize]
+    [HttpPut]
+    [Route("{id}")]
+    public async Task<IActionResult> Put(string id, [FromBody] VariableCost variableCost)
+    {
+        var userId = CurrentUserId;
+        variableCost.UserId = userId;
+        var updated = await variableCostsRepository.UpdateVariableCost(id, variableCost);
+        if(!updated.IsSuccess)
+            return BadRequest(Result<VariableCost>.Fail(updated.Error));
+        return Ok(Result<VariableCost>.Ok(variableCost));
+    }
 }

@@ -26,6 +26,21 @@ public class VariableCostsRepository(IDbContext context) : IVariableCostsReposit
         return Result<VariableCost>.Ok(dbVariableCost.Entity);
     }
 
+    public async Task<Result<VariableCost>> UpdateVariableCost(string id, VariableCost variableCost)
+    {
+        if(!int.TryParse(id, out var varCostId))
+            return Result<VariableCost>.Fail("Id invalid.");
+        if (await context.VariableCost.AnyAsync() == false)
+            return Result<VariableCost>.Fail("Variable cost not found.");
+        
+        variableCost.Id = varCostId;
+        
+        context.VariableCost.Update(variableCost);
+        context.SaveChanges();
+        return Result<VariableCost>.Ok(variableCost);
+    }
+
+
     public async Task<Result<VariableCost>> Delete(string variableCostId)
     {
         if(!int.TryParse(variableCostId, out var valideCostId))
