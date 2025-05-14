@@ -21,8 +21,9 @@ public class VariableCostsRepository(IDbContext context) : IVariableCostsReposit
         var valideCosts = AtLeastOneGreaterThanZero(variableCost); 
         if (!valideCosts.IsSuccess)
             return Result<VariableCost>.Fail(valideCosts.Error);
+        
         var dbVariableCost = await context.VariableCost.AddAsync(variableCost);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         return Result<VariableCost>.Ok(dbVariableCost.Entity);
     }
 
@@ -36,7 +37,7 @@ public class VariableCostsRepository(IDbContext context) : IVariableCostsReposit
         variableCost.Id = varCostId;
         
         context.VariableCost.Update(variableCost);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         return Result<VariableCost>.Ok(variableCost);
     }
 
@@ -45,12 +46,12 @@ public class VariableCostsRepository(IDbContext context) : IVariableCostsReposit
     {
         if(!int.TryParse(variableCostId, out var valideCostId))
             return Result<VariableCost>.Fail("Id invalido");
-        var finded = await context.VariableCost.FindAsync(valideCostId);
-        if (finded == null)
+        var found = await context.VariableCost.FindAsync(valideCostId);
+        if (found == null)
             return Result<VariableCost>.Fail("Variable cost not found");
-        context.VariableCost.Remove(finded);
-        context.SaveChanges();
-        return Result<VariableCost>.Ok(finded);
+        context.VariableCost.Remove(found);
+        await context.SaveChangesAsync();
+        return Result<VariableCost>.Ok(found);
     }
 
     private static Result<string> AtLeastOneGreaterThanZero(VariableCost variableCost)

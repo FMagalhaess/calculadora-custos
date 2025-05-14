@@ -18,7 +18,8 @@ public class FixedCostsRepository(IDbContext context) : IFixedCostsRepository
         if (validation.IsSuccess != true)
             return Result<FixedCost>.Fail(validation.Error);
         await context.FixedCosts.AddAsync(fixedCost);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
+
         return Result<FixedCost>.Ok(fixedCost);
     }
 
@@ -32,7 +33,7 @@ public class FixedCostsRepository(IDbContext context) : IFixedCostsRepository
         fixedCost.Id = fixedCostId;
         
         context.FixedCosts.Update(fixedCost);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         
         return Result<FixedCost>.Ok(fixedCost);
     }
@@ -47,7 +48,7 @@ public class FixedCostsRepository(IDbContext context) : IFixedCostsRepository
             return Result<FixedCost>.Fail($"id {fixedCostId} not found");
         
         context.FixedCosts.Remove(toDelete);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         return Result<FixedCost>.Ok(toDelete);
     }
 
