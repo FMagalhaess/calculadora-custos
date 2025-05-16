@@ -15,7 +15,7 @@ public static class EnsureFields{
     }
     public static Result<string> EnsureMeasurementUnitIsValid(string measurementUnit)
     {
-        Span<string> validMeasurementUnit = ["Kg", "g", "L", "mL", "un"];
+        List<string> validMeasurementUnit = ["g", "ml", "un"];
         foreach (var m in validMeasurementUnit)
         {
             if (m == measurementUnit.Trim())
@@ -24,7 +24,7 @@ public static class EnsureFields{
             }
         }
 
-        return Result<string>.Fail($"measurement unit must be one of: {measurementUnit}.");
+        return Result<string>.Fail($"measurement unit must be one of: {string.Join(", ", validMeasurementUnit)}.");
     }
 
     public static Result<string> EnsureListDoesNotContainZeroOrNegative<T>(List<T> list, string fieldName)

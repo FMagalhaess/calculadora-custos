@@ -2,28 +2,32 @@ using calculadora_custos.DTO;
 using calculadora_custos.Models;
 using calculadora_custos.Results;
 using calculadora_custos.Services;
+using calculadora_custos.Services.Calculation;
+using calculadora_custos.Services.Validation;
 using Microsoft.EntityFrameworkCore;
 
 namespace calculadora_custos.Repository;
 
 public class RecipeRepository(
     IDbContext context,
+    IValideInputs valideInputs,
+    ICalculeItens calculeItens,
     IIngredientsToRecipe ingredientsToRecipe) : IRecipeRepository
 {
     private Result<decimal> _totalCosts;
     private decimal _profitPercentage;
     public async Task<Result<Recipe>> CreateRecipe(InputRecipeFromDto recipe)
     {
-        var validation = ValideRecipeCreation(recipe);
+        var validation = valideInputs.ValideRecipe(recipe);
         if (!validation.IsSuccess)
             return Result<Recipe>.Fail(validation.Error);
         
-        _totalCosts = CalculateIngredientCost(recipe);
+        _totalCosts = calculeItens.CalculateCosts(recipe.Ingredients, recipe.IngredientsAmount);
         if (!_totalCosts.IsSuccess)
             return Result<Recipe>.Fail(_totalCosts.Error);
         
         if(recipe.SellPrice > 0)
-            _profitPercentage = CalculateProfitPercentage(_totalCosts.Data, recipe.SellPrice);
+            _profitPercentage = calculeItens.CalculatePercentage(_totalCosts.Data, recipe.SellPrice).Data;
 
         var toReturn = new Recipe
         {
@@ -39,47 +43,51 @@ public class RecipeRepository(
         
         return Result<Recipe>.Ok(toReturn);
     }
-
-    private static Result<string> ValideRecipeCreation(InputRecipeFromDto recipe)
-    {
-        return EnsureFields.RunValidations(
-            EnsureFields.NotNullOrEmpty(recipe.Name!, "Name"),
-            EnsureFields.EnsureListNotNullOrEmpty(recipe.Ingredients!, "Ingredients"),
-            EnsureFields.EnsureListNotNullOrEmpty(recipe.IngredientsAmount!, "IngredientsAmount"),
-            EnsureFields.CheckIfItemListsAreEqualRr(recipe.Ingredients!, recipe.IngredientsAmount!),
-            EnsureFields.EnsureListDoesNotContainZeroOrNegative(recipe.Ingredients!, "ingredients"),
-            EnsureFields.EnsureListDoesNotContainZeroOrNegative(recipe.IngredientsAmount!, "ingredientsAmount")
-            );
-    }
-
-    private Result<decimal> CalculateIngredientCost(InputRecipeFromDto recipe)
-    {
-        decimal totalCost = 0;
-        foreach (var ingredient in recipe.Ingredients!)
-        {
-            if (!context.Ingredients.Any(i => i.Id == ingredient))
-                return Result<decimal>.Fail($"Ingredient {ingredient} not found");
-            var findedIngredient = context.Ingredients.FirstOrDefault(i => i.Id == ingredient);
-            totalCost += (decimal)findedIngredient!.TotalValue * recipe.IngredientsAmount![recipe.Ingredients.IndexOf(ingredient)];
-        }
-        return Result<decimal>.Ok(totalCost);
-    }
     public async Task<List<Recipe>> GetRecipes()
     {
         return await context.Recipes.ToListAsync();
     }
 
-    
-    public decimal CalculateProfitPercentage(decimal cost, decimal price)
+    public async Task<Result<Recipe>> DeleteRecipe(string id)
     {
-        decimal profit = price - cost;
-        return (profit / price) * 100;
+        if(!int.TryParse(id, out int recipeId))
+            return Result<Recipe>.Fail($"Invalid id: {id}");
+        var found = await context.Recipes.FindAsync(recipeId);
+        if (found == null)
+            return Result<Recipe>.Fail("Recipe not found");
+        context.Recipes.Remove(found);
+        await context.SaveChangesAsync();
+        return Result<Recipe>.Ok(found);
     }
 
-    public bool RecipeExists(int id)
+    public async Task<Result<Recipe>> UpdateRecipe(string id, InputRecipeFromDto recipe)
     {
-        return context.Recipes.Any(r => r.Id == id);
+        var validation = valideInputs.ValideRecipe(recipe);
+        if (!validation.IsSuccess)
+            return Result<Recipe>.Fail(validation.Error);
+        
+        if(!int.TryParse(id, out int recipeId))
+            return Result<Recipe>.Fail("Invalid id");
+        
+        _totalCosts = calculeItens.CalculateCosts(recipe.Ingredients, recipe.IngredientsAmount);
+        if (!_totalCosts.IsSuccess)
+            return Result<Recipe>.Fail(_totalCosts.Error);
+        
+        if(recipe.SellPrice > 0)
+            _profitPercentage = calculeItens.CalculatePercentage(_totalCosts.Data, recipe.SellPrice).Data;
+        var dbRecipe = await context.Recipes.FindAsync(recipeId);
+        if (dbRecipe == null)
+            return Result<Recipe>.Fail("Recipe not found");
+        dbRecipe.Name = recipe.Name;
+        dbRecipe.SellPrice = recipe.SellPrice;
+        dbRecipe.ProfitPercentage = _profitPercentage;
+        dbRecipe.Profit = recipe.SellPrice - _totalCosts.Data;
+        dbRecipe.Cost = _totalCosts.Data;
+        context.Recipes.Update(dbRecipe);
+        await context.SaveChangesAsync();
+        return Result<Recipe>.Ok(dbRecipe);
     }
+    
     public List<IngredientReturnedByRecipeIdDto> IngredientsReturnedByRecipeId(int recipeId)
     {
         var ingredientsQuerry = from r in context.Recipes
@@ -98,7 +106,7 @@ public class RecipeRepository(
     }
     public async Task<Result<Recipe>> GetRecipeById(string id)
     {
-        if (int.TryParse(id, out var recipeId))
+        if (!int.TryParse(id, out var recipeId))
             return Result<Recipe>.Fail($"Parse failed: {id}");
         var foundedRecipe = await context.Recipes.FindAsync(recipeId);
         if (foundedRecipe == null)

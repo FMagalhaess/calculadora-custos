@@ -2,7 +2,9 @@ using System.Text;
 using calculadora_custos.Repository;
 using calculadora_custos.Repository.FixedCosts;
 using calculadora_custos.Repository.VariableCosts;
+using calculadora_custos.Services.Calculation;
 using calculadora_custos.Services.JWT;
+using calculadora_custos.Services.Validation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -42,6 +44,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IFixedCostsRepository, FixedCostsRepository>();
 builder.Services.AddScoped<IVariableCostsRepository, VariableCostsRepository>();
+builder.Services.AddScoped<IValideInputs, ValideInputs>();
+builder.Services.AddScoped<ICalculeItens, CalculeItens>();
 
 // Add services to the container.
 builder.Services.AddAuthorization();

@@ -12,10 +12,19 @@ namespace calculadora_custos.Models
         
         [Column(TypeName = "varchar(100)")]
         public string? MeasurementUnit { get; set; }
-        public double TotalAmount { get; set; }
-        public double TotalValue { get; set; }
-        public double ValuePerAmount { get; set; }
-        public double DefaultAmount { get; set; }
+        
+        [Column(TypeName = "decimal(19,4)")]
+        public decimal TotalAmount { get; set; }
+        
+        [Column(TypeName = "decimal(19,4)")]
+        public decimal TotalValue { get; set; }
+        
+        [Column(TypeName = "decimal(19,4)")]
+        public decimal ValuePerAmount { get; set; }
+        
+        [Column(TypeName = "decimal(19,4)")]
+        public decimal DefaultAmount { get; set; }
+        
         public DateTime? DeletedAt { get; set; }
     }
 }

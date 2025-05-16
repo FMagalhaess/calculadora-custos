@@ -8,7 +8,7 @@ namespace calculadora_custos.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class RecipeController(IRecipeRepository recipeRepository) : ControllerBase
+    public class RecipeController(IRecipeRepository recipeRepository) : BaseForControllerWithJwt
     {
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -32,6 +32,26 @@ namespace calculadora_custos.Controllers
             if (!createdRecipe.IsSuccess)
                 return BadRequest(Result<Recipe>.Fail(createdRecipe.Error));
             return Ok(createdRecipe);
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update(string id, [FromBody] InputRecipeFromDto recipe)
+        {
+            var updatedRecipe = await recipeRepository.UpdateRecipe(id, recipe);
+            if (!updatedRecipe.IsSuccess)
+                return BadRequest(updatedRecipe.Error);
+            return Ok(Result<Recipe>.Ok(updatedRecipe.Data!));
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var deletedRecipe = await recipeRepository.DeleteRecipe(id);
+            if (!deletedRecipe.IsSuccess)
+                return BadRequest(deletedRecipe);
+            return Ok(Result<Recipe>.Ok(deletedRecipe.Data!));
         }
         // [HttpGet]
         // [Route("ingredients/{id}")]

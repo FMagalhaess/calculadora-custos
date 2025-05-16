@@ -1,11 +1,13 @@
 using calculadora_custos.Models;
 using calculadora_custos.Results;
 using calculadora_custos.Services;
+using calculadora_custos.Services.Calculation;
 using Microsoft.EntityFrameworkCore;
 
 namespace calculadora_custos.Repository;
 
-public class IngredientRepository(IDbContext context) : IIngredientRepository
+public class IngredientRepository(IDbContext context,
+    ICalculeItens calculeItens) : IIngredientRepository
 {
     public async Task<List<Ingredient>> GetIngredients()
     {
@@ -19,7 +21,8 @@ public class IngredientRepository(IDbContext context) : IIngredientRepository
             return Result<Ingredient>.Fail(validation.Error);
 
         ingredient.ValuePerAmount = DivideTotalAmountByTotalValueToGetValuePerAmount(ingredient);
-
+        ingredient.DefaultAmount = calculeItens.CalculteDefaultCost(ingredient).Data;
+        
         await context.Ingredients.AddAsync(ingredient);
         await context.SaveChangesAsync();
         
@@ -64,20 +67,18 @@ public class IngredientRepository(IDbContext context) : IIngredientRepository
         return Result<Ingredient>.Ok(ingredient);
         
     }
-    private static double DivideTotalAmountByTotalValueToGetValuePerAmount(Ingredient ingredient)
+    private static decimal DivideTotalAmountByTotalValueToGetValuePerAmount(Ingredient ingredient)
     {
         return ingredient.MeasurementUnit switch
         {
             "un" => ingredient.TotalValue,
-            "kg" => ingredient.TotalValue,
             "g" => ProportionalRule(ingredient.TotalAmount, ingredient.TotalValue, 1000),
-            "L" => ingredient.TotalValue,
-            "mL" => ProportionalRule(ingredient.TotalAmount, ingredient.TotalValue, 1000),
+            "ml" => ProportionalRule(ingredient.TotalAmount, ingredient.TotalValue, 1000),
             _ => ingredient.TotalValue
         };
     }
     
-    private static double ProportionalRule(double knownWeight, double knownPrice, double desiredWeight)
+    private static decimal ProportionalRule(decimal knownWeight, decimal knownPrice, decimal desiredWeight)
     {
         return knownPrice * desiredWeight / knownWeight;
     }
