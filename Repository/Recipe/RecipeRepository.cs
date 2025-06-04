@@ -1,4 +1,5 @@
 using calculadora_custos.DTO;
+using calculadora_custos.Enums;
 using calculadora_custos.Models;
 using calculadora_custos.Results;
 using calculadora_custos.Services;
@@ -9,10 +10,10 @@ using Microsoft.EntityFrameworkCore;
 namespace calculadora_custos.Repository;
 
 public class RecipeRepository(
+    ICostToRecipe costToRecipe,
     IDbContext context,
     IValideInputs valideInputs,
-    ICalculeItens calculeItens,
-    IIngredientsToRecipe ingredientsToRecipe) : IRecipeRepository
+    ICalculeItens calculeItens) : IRecipeRepository
 {
     private Result<decimal> _totalCosts;
     private decimal _profitPercentage;
@@ -38,8 +39,20 @@ public class RecipeRepository(
             Profit = recipe.SellPrice - _totalCosts.Data
         };
         
-        await context.Recipes.AddAsync(toReturn);
+        var dbRecipe = await context.Recipes.AddAsync(toReturn);
         await context.SaveChangesAsync();
+        
+        for ( var i = 0; i < recipe.Ingredients.Count; i++ )
+        {
+            var cost = costToRecipe.Create(
+                dbRecipe.Entity.Id,
+                recipe.Ingredients[i],
+                recipe.UserId,
+                (int)CostType.Ingredient,
+                recipe.IngredientsAmount[i]);
+            if (!cost.IsSuccess)
+                return Result<Recipe>.Fail(cost.Error);
+        }
         
         return Result<Recipe>.Ok(toReturn);
     }
@@ -88,22 +101,22 @@ public class RecipeRepository(
         return Result<Recipe>.Ok(dbRecipe);
     }
     
-    public List<IngredientReturnedByRecipeIdDto> IngredientsReturnedByRecipeId(int recipeId)
-    {
-        var ingredientsQuerry = from r in context.Recipes
-                        join ir in context.IngredientToRecipes on r.Id equals ir.RecipeId
-                        join i in context.Ingredients on ir.IngredientId equals i.Id
-                        where r.Id == recipeId
-                        select new IngredientReturnedByRecipeIdDto
-                        {
-                            Id = i.Id,
-                            RecipeName = r.Name,
-                            IngredientName = i.Name,
-                        };
-        var toReturn = ingredientsQuerry.ToList();
-
-        return toReturn;
-    }
+    // public List<IngredientReturnedByRecipeIdDto> IngredientsReturnedByRecipeId(int recipeId)
+    // {
+    //     var ingredientsQuerry = from r in context.Recipes
+    //                     join ir in context.IngredientToRecipes on r.Id equals ir.RecipeId
+    //                     join i in context.Ingredients on ir.IngredientId equals i.Id
+    //                     where r.Id == recipeId
+    //                     select new IngredientReturnedByRecipeIdDto
+    //                     {
+    //                         Id = i.Id,
+    //                         RecipeName = r.Name,
+    //                         IngredientName = i.Name,
+    //                     };
+    //     var toReturn = ingredientsQuerry.ToList();
+    //
+    //     return toReturn;
+    // }
     public async Task<Result<Recipe>> GetRecipeById(string id)
     {
         if (!int.TryParse(id, out var recipeId))

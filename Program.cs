@@ -39,7 +39,7 @@ builder.Services.AddDbContext<MyContext>();
 builder.Services.AddScoped<IDbContext, MyContext>();
 builder.Services.AddScoped<IIngredientRepository, IngredientRepository>();
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
-builder.Services.AddScoped<IIngredientsToRecipe, IngredientsToRecipeRepository>();
+builder.Services.AddScoped<ICostToRecipe, CostToRecipeRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IFixedCostsRepository, FixedCostsRepository>();

@@ -7,7 +7,7 @@ public class CostItem
 {
     public int Id { get; set; }
     public Guid UserId { get; set; }
-    public ItemType ItemType { get; set; }
+    public CostType ItemType { get; set; }
     
     [Column(TypeName = "varchar(100)")]
     public string? ItemName { get; set; }

@@ -1,8 +1,8 @@
 namespace calculadora_custos.Enums;
 
-public enum ItemType
+public enum CostType
 {
-    Variable,
+    Variable = 1,
     Fixed,
     Ingredient
 }

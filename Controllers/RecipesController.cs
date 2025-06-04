@@ -28,6 +28,7 @@ namespace calculadora_custos.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] InputRecipeFromDto recipe)
         {
+            recipe.UserId = CurrentUserId;
             var createdRecipe = await recipeRepository.CreateRecipe(recipe);
             if (!createdRecipe.IsSuccess)
                 return BadRequest(Result<Recipe>.Fail(createdRecipe.Error));

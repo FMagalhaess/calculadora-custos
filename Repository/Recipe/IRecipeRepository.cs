@@ -10,5 +10,5 @@ public interface IRecipeRepository
     Task<Result<Recipe>> CreateRecipe(InputRecipeFromDto recipe);
     Task<Result<Recipe>> DeleteRecipe(string id);
     Task<Result<Recipe>> UpdateRecipe(string id,InputRecipeFromDto recipe);
-    List<IngredientReturnedByRecipeIdDto> IngredientsReturnedByRecipeId(int RecipeId);
+    // List<IngredientReturnedByRecipeIdDto> IngredientsReturnedByRecipeId(int RecipeId);
 }

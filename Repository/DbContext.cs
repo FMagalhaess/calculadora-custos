@@ -18,7 +18,7 @@ namespace calculadora_custos.Repository
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<FixedCost> FixedCosts { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
-        public DbSet<IngredientToRecipe> IngredientToRecipes { get; set; }
+        public DbSet<CostToRecipe> CostsToRecipe { get; set; }
         public DbSet<CostItem> CostItems { get; set; }
         public DbSet<VariableCost> VariableCost { get; set; }
 
