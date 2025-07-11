@@ -95,5 +95,5 @@ Esse projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 
 **Filipe Magalhães**
 📧 [7filipe093@gmail.com](mailto:7filipe093@gmail.com)
-🔗 [LinkedIn](https://linkedin.com/in/filipemagalhãesdev)
+🔗 [LinkedIn](https://www.linkedin.com/in/filipemagalhaesdev/)
 🌐 [Portfólio](https://portfolio-filipe-magalhaes-dev.onrender.com)
