@@ -59,24 +59,6 @@ dotnet ef database update
 dotnet run
 ```
 
-A aplicação estará disponível em: `https://localhost:5001`
-
----
-
-## 📁 Estrutura do Projeto
-
-```
-CalculadoraCustos/
-├── Controllers/
-├── Models/
-├── Services/
-├── Data/
-├── Migrations/
-├── Program.cs
-├── Startup.cs
-└── appsettings.json
-```
-
 ---
 
 ## 🤝 Contribuindo
